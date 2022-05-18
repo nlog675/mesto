@@ -7,9 +7,9 @@
 
 Некоторые технологии, использованные в проекте:
 
-*Javascript
-*Grid
-*flexbox
+* Javascript
+* Grid
+* flexbox
 
 
-* [Ссылка на проект](https://nlog675.github.io/mesto/)
+[Ссылка на проект](https://nlog675.github.io/mesto/)
