@@ -5,3 +5,9 @@
     max-width: calc(100% - 72px);
     height: 100%;
 }
+
+@media screen and (max-width: 424px) {
+    .popup__form {
+        max-width: calc(100% - 44px);
+    }
+}
