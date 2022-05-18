@@ -17,8 +17,10 @@ function closePopup(popupElement) {
 
 editButton.addEventListener('click', function() {
     openPopup(popup)
-    popupYourName.value = 'Жак-Ив Кусто'
-    popupAboutYou.value = 'Исследователь океана'
+    //popupYourName.value = 'Жак-Ив Кусто'
+    popupYourName.value = profileName.textContent.trim()
+    //popupAboutYou.value = 'Исследователь океана'
+    popupAboutYou.value = profileAbout.textContent.trim()
 })
 
 popupCloseButton.addEventListener('click', function() {
