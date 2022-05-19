@@ -1,5 +1,5 @@
 .popup__input {
-    padding: 0 0 13px 0;
+    padding: 0 0 10px 0;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.2;
@@ -11,3 +11,6 @@
 .popup__input:last-of-type {
     margin-top: 30px;
 }
+
+/* отступы не по макету сделаны специально,
+    чтобы попасть в pixelperfect */

@@ -7,31 +7,25 @@ const profileName = document.querySelector('.profile__name')
 const profileAbout = document.querySelector('.profile__description')
 const formElement = document.querySelector('.popup__form')
 
-function openPopup(popupElement) {
-    popupElement.classList.add('popup_isOpen')
+function openPopup() {
+    popup.classList.add('popup_isOpen')
+    popupYourName.value = profileName.textContent
+    popupAboutYou.value = profileAbout.textContent
 }
 
-function closePopup(popupElement) {
-    popupElement.classList.remove('popup_isOpen')
+function closePopup() {
+    popup.classList.remove('popup_isOpen')
 }
 
-editButton.addEventListener('click', function() {
-    openPopup(popup)
-    //popupYourName.value = 'Жак-Ив Кусто'
-    popupYourName.value = profileName.textContent.trim()
-    //popupAboutYou.value = 'Исследователь океана'
-    popupAboutYou.value = profileAbout.textContent.trim()
-})
-
-popupCloseButton.addEventListener('click', function() {
-    closePopup(popup)
-    //profileName.textContent = popupYourName.value
-    //profileAbout.textContent = popupAboutYou.value
-})
-
-formElement.addEventListener('submit', function(event) {
+function formSubmit(event) {
     event.preventDefault()
     profileName.textContent = popupYourName.value
     profileAbout.textContent = popupAboutYou.value
-    closePopup(popup)
-})
+    closePopup()
+}
+
+editButton.addEventListener('click', openPopup)
+
+popupCloseButton.addEventListener('click', closePopup)
+
+formElement.addEventListener('submit', formSubmit)
