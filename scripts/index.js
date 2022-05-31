@@ -40,8 +40,9 @@ const popupPlaceName = document.querySelector('.popup__input-place-name');
 const popupPlaceLink = document.querySelector('.popup__input-place-link');
 const popupAddCloseButton = document.querySelector('.popup__close-add');
 const cardTemplate = document.querySelector('#card').content;
-
 const cardList = document.querySelector('.elements__list');
+const formElementAdd = document.querySelector('.popup__form-add-card');
+const cardElement = cardTemplate.querySelector('.elements__item');
 
 
 //открытие и закрытие попапов
@@ -121,3 +122,14 @@ const addCard = item => {
 
 //цикл массива с пререндерными карточками
 initialCards.forEach(addCard);
+
+//добавление пользовательской карточки
+const createUsersCard = e => {
+  e.preventDefault()
+  const usersCard = createCard({name: popupPlaceName.value, link: popupPlaceLink.value});
+  cardList.prepend(usersCard);
+  closePopup(popupAdd);
+};
+
+formElementAdd.addEventListener('submit', createUsersCard);
+
