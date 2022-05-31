@@ -24,6 +24,7 @@
 @import url(../blocks/elements/__card-heading/elements__card-heading.css);
 @import url(../blocks/elements/__card-info/elements__card-info.css);
 @import url(../blocks/elements/__card-like/elements__card-like.css);
+@import url(../blocks/elements/__card-like/_active/elements__card-like_active.css);
 
 @import url(../blocks/footer/footer.css);
 @import url(../blocks/footer/__copyright/footer__copyright.css);

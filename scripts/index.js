@@ -45,6 +45,7 @@ const formElementAdd = document.querySelector('.popup__form-add-card');
 const cardElement = cardTemplate.querySelector('.elements__item');
 
 
+
 //открытие и закрытие попапов
 function openPopup(popup) {
     popup.classList.add('popup_isOpen');
@@ -100,6 +101,9 @@ const getCardElementImage = cardElement => cardElement.querySelector('.elements_
 const getCardElementName = cardElement => cardElement.querySelector('.elements__card-heading');
 const getCardElementAlt = cardElement => cardElement.querySelector('.elements__card-heading');
 
+//лайк карточки
+const likeCard = e => e.target.classList.toggle('elements__card-like_active');
+
 //создание карточек
 const createCard = item => {
   const cardElement = cardTemplate
@@ -109,6 +113,9 @@ const createCard = item => {
   getCardElementImage(cardElement).src = item.link;
   getCardElementName(cardElement).textContent = item.name;
   getCardElementAlt(cardElement).alt = item.name;
+
+  const cardLikeBtn = cardElement.querySelector('.elements__card-like');
+  cardLikeBtn.addEventListener('click', likeCard)
   
   return cardElement;
 };
@@ -132,4 +139,8 @@ const createUsersCard = e => {
 };
 
 formElementAdd.addEventListener('submit', createUsersCard);
+
+// const likedCard = e => {
+//   e.currentTarget.classList.toggle('elements__card-like_active');
+// }
 
