@@ -50,42 +50,42 @@ const popupImageName = document.querySelector('.popup__caption');
 
 
 //открытие и закрытие попапов
-function openPopup(popup) {
+const openPopup = (popup) => {
     popup.classList.add('popup_isOpen');
     popup.classList.remove('popup_isClosed');
-};
+}
 
-function closePopup(popup) {
+const closePopup = (popup) => {
     popup.classList.remove('popup_isOpen');
     popup.classList.add('popup_isClosed');
-};
+}
 
 //заполнение полей профиля
-function profileInputs() {
+function getProfileInputs() {
     popupYourName.value = profileName.textContent;
     popupAboutYou.value = profileAbout.textContent;
 };
 
 //заполнение полей добавления картинки
-function placeInputs() {
+function getPlaceInputs() {
   popupPlaceName.value = popupPlaceName.textContent;
   popupPlaceLink.value = popupPlaceLink.textContent;
 };
 
 //сабмит формы профиля
-function formSubmit(event) {
-  event.preventDefault();
+function submitForm(e) {
+  e.preventDefault();
   profileName.textContent = popupYourName.value;
   profileAbout.textContent = popupAboutYou.value;
   closePopup(popup);
 };
 
 //обработчики событий
-formElement.addEventListener('submit', formSubmit);
+formElement.addEventListener('submit', submitForm);
 
 editButton.addEventListener('click', () => {
     openPopup(popupEdit);
-    profileInputs();
+    getProfileInputs();
 });
 
 popupEditCloseButton.addEventListener('click', () => {
@@ -98,7 +98,7 @@ popupAddCloseButton.addEventListener('click', () => {
 
 addButton.addEventListener('click', () => {
     openPopup(popupAdd);
-    placeInputs();
+    getPlaceInputs();
 });
 
 
