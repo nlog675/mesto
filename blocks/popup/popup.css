@@ -5,11 +5,15 @@
     bottom: 0;
     right: 0;
     background: rgba(0, 0, 0, .5);
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity .3s linear;;
 }
 
 .popup_isOpen {
-    display: flex;
+    visibility: visible;
+    opacity: 1;
 }
