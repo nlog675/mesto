@@ -9,11 +9,34 @@
     justify-content: center;
     align-items: center;
     visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s, opacity .3s linear;;
 }
 
 .popup_isOpen {
-    visibility: visible;
-    opacity: 1;
+    animation: popupOpens .3s linear both;
+}
+
+.popup_isClosed {
+    animation: popupCloses .3s linear both;
+}
+
+@keyframes popupOpens {
+    from {
+        visibility: hidden;
+        opacity: 0;
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+@keyframes popupCloses {
+    from {
+        visibility: visible;
+        opacity: 1;
+    }
+    to {
+        visibility: hidden;
+        opacity: 0;
+    }
 }

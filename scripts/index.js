@@ -43,10 +43,7 @@ const cardTemplate = document.querySelector('#card').content;
 const cardList = document.querySelector('.elements__list');
 const formElementAdd = document.querySelector('.popup__form-add-card');
 const cardElement = cardTemplate.querySelector('.elements__item');
-
 const popupPicture = document.querySelector('.popup-picture');
-
-
 const popupImageSrc = document.querySelector('.popup__image');
 const popupImageName = document.querySelector('.popup__caption');
 
@@ -55,10 +52,12 @@ const popupImageName = document.querySelector('.popup__caption');
 //открытие и закрытие попапов
 function openPopup(popup) {
     popup.classList.add('popup_isOpen');
+    popup.classList.remove('popup_isClosed');
 };
 
 function closePopup(popup) {
     popup.classList.remove('popup_isOpen');
+    popup.classList.add('popup_isClosed');
 };
 
 //заполнение полей профиля
@@ -119,19 +118,16 @@ const createCard = item => {
   const cardElement = cardTemplate
   .querySelector('.elements__item')
   .cloneNode(true);
+  const cardLikeBtn = cardElement.querySelector('.elements__card-like');
+  const deleteBtn = cardElement.querySelector('.elements__card-delete');
+  const popupPicBtn = cardElement.querySelector('.elements__item-image');
+  const popupClosePicBtn = document.querySelector('.popup__close-pic');
 
   getCardElementImage(cardElement).src = item.link;
   getCardElementName(cardElement).textContent = item.name;
-
-  const cardLikeBtn = cardElement.querySelector('.elements__card-like');
-  const deleteBtn = cardElement.querySelector('.elements__card-delete');
   
   cardLikeBtn.addEventListener('click', likeCard);
-  
   deleteBtn.addEventListener('click', deleteCard);
-
-  const popupPicBtn = cardElement.querySelector('.elements__item-image');
-  const popupClosePicBtn = document.querySelector('.popup__close-pic');
   
   popupPicBtn.addEventListener('click', () => {
     openPopup(popupPicture);
@@ -166,32 +162,3 @@ const createUsersCard = e => {
 };
 
 formElementAdd.addEventListener('submit', createUsersCard);
-
-
-
-
-
-// popupPicBtn.addEventListener('click', () => {
-//   // openPopup(popupPicture);
-//   console.log(hello);
-// });
-
-
-
-// const openPopupPic = (cardElement) => {
-//   return() => {
-//   openPopupPic(cardElement);
-//   popupImageSrc.src = cardElement.src;
-//   popupImageName.textContent = cardElement.textContent;
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
