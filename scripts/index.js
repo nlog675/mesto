@@ -28,7 +28,6 @@ const initialCards = [
 const editButton = document.querySelector('.profile__edit-button');
 const popup = document.querySelector('.popup');
 const popupEdit = document.querySelector('.popup-edit');
-const popupEditCloseButton = document.querySelector('.popup__close-edit');
 const popupYourName = document.querySelector('.popup__input-name');
 const popupAboutYou = document.querySelector('.popup__input-about');
 const profileName = document.querySelector('.profile__name');
@@ -38,7 +37,6 @@ const addButton = document.querySelector('.profile__add-button');
 const popupAdd = document.querySelector('.popup-add');
 const popupPlaceName = document.querySelector('.popup__input-place-name');
 const popupPlaceLink = document.querySelector('.popup__input-place-link');
-const popupAddCloseButton = document.querySelector('.popup__close-add');
 const cardTemplate = document.querySelector('#card').content;
 const cardList = document.querySelector('.elements__list');
 const formElementAdd = document.querySelector('.popup__form-add-card');
@@ -46,7 +44,7 @@ const cardElement = cardTemplate.querySelector('.elements__item');
 const popupPicture = document.querySelector('.popup-picture');
 const popupImageSrc = document.querySelector('.popup__image');
 const popupImageName = document.querySelector('.popup__caption');
-
+const popups = document.querySelectorAll('.popup');
 
 
 //открытие и закрытие попапов
@@ -88,24 +86,10 @@ editButton.addEventListener('click', () => {
     getProfileInputs();
 });
 
-popupEditCloseButton.addEventListener('click', () => {
-    closePopup(popupEdit);
-});
-
-popupAddCloseButton.addEventListener('click', () => {
-    closePopup(popupAdd);
-});
-
 addButton.addEventListener('click', () => {
     openPopup(popupAdd);
-    getPlaceInputs();
+    formElementAdd.reset();
 });
-
-
-
-//рефакторинг длинной функции создания карточек
-const getCardElementImage = cardElement => cardElement.querySelector('.elements__item-image');
-const getCardElementName = cardElement => cardElement.querySelector('.elements__card-heading');
 
 //лайк карточки
 const likeCard = e => e.currentTarget.classList.toggle('elements__card-like_active');
@@ -121,10 +105,11 @@ const createCard = item => {
   const cardLikeBtn = cardElement.querySelector('.elements__card-like');
   const deleteBtn = cardElement.querySelector('.elements__card-delete');
   const popupPicBtn = cardElement.querySelector('.elements__item-image');
-  const popupClosePicBtn = document.querySelector('.popup__close-pic');
+  const cardElementName = cardElement.querySelector('.elements__card-heading');
 
-  getCardElementImage(cardElement).src = item.link;
-  getCardElementName(cardElement).textContent = item.name;
+  popupPicBtn.src = item.link;
+  cardElementName.textContent = item.name;
+  popupPicBtn.alt = item.name; 
   
   cardLikeBtn.addEventListener('click', likeCard);
   deleteBtn.addEventListener('click', deleteCard);
@@ -133,13 +118,9 @@ const createCard = item => {
     openPopup(popupPicture);
     popupImageSrc.src = item.link;
     popupImageName.textContent = item.name;
+    popupImageSrc.alt = item.name;
   });
 
-  popupClosePicBtn.addEventListener('click', () => {
-    closePopup(popupPicture);
-  });
-
-  
   return cardElement;
 };
 
@@ -162,3 +143,12 @@ const createUsersCard = e => {
 };
 
 formElementAdd.addEventListener('submit', createUsersCard);
+
+//обработчик события закрытия любого попапа
+popups.forEach((popup) => {
+  popup.addEventListener('click', e => {
+    if (e.target.classList.contains('popup__close')) {
+      closePopup(popup);
+    }
+  });
+});
