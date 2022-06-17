@@ -44,9 +44,11 @@
             <h2 class="popup__title">
                 Редактировать профиль
             </h2>
-            <form name="profile" class="popup__form popup__form-edit-profile">
-                <input name="name" type="text" class="popup__input popup__input-name" placeholder="Имя">
-                <input name="bio" type="text" class="popup__input popup__input-about" placeholder="О себе">
+            <form name="profile" class="popup__form popup__form-edit-profile" novalidate>
+                <input id="name" name="name" type="text" class="popup__input popup__input-name" placeholder="Имя" minlength="2" maxlength="40" required>
+                <span id="error-name" class="error-message"></span>
+                <input id="bio" name="bio" type="text" class="popup__input popup__input-about" placeholder="О себе" minlength="2" maxlength="200" required>
+                <span id="error-bio" class="error-message"></span>
                 <button type="submit" class="popup__button popup__profile-edit-btn">
                     Сохранить
                 </button>
