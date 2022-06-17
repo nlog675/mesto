@@ -10,11 +10,15 @@ const validationSettings = ({
 const formInput = document.querySelector(validationSettings.inputSelector);
 const formError = formElement.querySelector(`.${formInput.id}-error`);
 
+// найти невалидный input
+
 const hasInvalidInput = inputList => {
   return inputList.some((inputElement) => {
     return !inputElement.validity.valid;
-  })
+  });
 };
+
+// переключение активности кнопки Submit
 
 const toggleButtonState = (inputList, buttonElement) => {
   if (hasInvalidInput(inputList)) {
@@ -26,6 +30,8 @@ const toggleButtonState = (inputList, buttonElement) => {
   }
 };
 
+// универсальная функция добавления обработчика всем полям формы
+
 const setEventListeners = formElement => {
   const inputList = Array.from(formElement.querySelectorAll(validationSettings.inputSelector));
   const buttonElement = formElement.querySelector(validationSettings.submitButtonSelector);
@@ -34,9 +40,11 @@ const setEventListeners = formElement => {
     inputElement.addEventListener('input', () => {
       isValid(formElement, inputElement);
       toggleButtonState(inputList,buttonElement);
-    })
-  })
-}
+    });
+  });
+};
+
+// функция перебора всех полей на странице
 
 const enableValidation = () => {
   const formList = Array.from(document.querySelectorAll(validationSettings.formSelector));
@@ -45,12 +53,16 @@ const enableValidation = () => {
       e.preventDefault();
     });
     setEventListeners(formElement);
-  })
+  });
 };
+
+// отмена стандартного поведения кнопки
 
 formElement.addEventListener('submit', function(e) {
   e.preventDefault();
 });
+
+// функция, показывающая ошибку ввода
 
 const showInputError = (formElement, inputElement, errorMessage) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -58,12 +70,17 @@ const showInputError = (formElement, inputElement, errorMessage) => {
   inputElement.classList.add(validationSettings.inputErrorClass);
   errorElement.classList.add(validationSettings.errorClass);
 };
+
+// функция, скрывающая ошибку ввода
+
 const hideInputError = (formElement, inputElement) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.remove(validationSettings.inputErrorClass);
   errorElement.classList.remove(validationSettings.errorClass);
   errorElement.textContent = '';
 };
+
+// функция, проверяющая валидность полей
 
 const isValid = (formElement, inputElement) => {
   if (!inputElement.validity.valid) {
@@ -73,22 +90,25 @@ const isValid = (formElement, inputElement) => {
   }
 };
 
-const body = document.querySelector('.page')
-//закрытие попапа на еск
+// функция, закрывающая попап клавишей escape
+
 popups.forEach((popup) => {
+  const body = document.querySelector('.page')
   body.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-      closePopup(popup)
+      closePopup(popup);
     }
-  })
-})
+  });
+});
+
+// функция, закрывающая попап кликом на оверлей
 
 popups.forEach((popup) => {
   popup.addEventListener('click', e => {
     if (e.target === e.currentTarget) {
-      closePopup(popup)
+      closePopup(popup);
     }
-  })
-})
+  });
+});
 
 enableValidation(validationSettings);
