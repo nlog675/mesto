@@ -51,11 +51,13 @@ const popups = document.querySelectorAll('.popup');
 const openPopup = (popup) => {
     popup.classList.add('popup_isOpen');
     popup.classList.remove('popup_isClosed');
+    document.addEventListener('keydown', keyEscHandler);
 }
 
 const closePopup = (popup) => {
     popup.classList.remove('popup_isOpen');
     popup.classList.add('popup_isClosed');
+    document.removeEventListener('keydown', keyEscHandler);
 }
 
 //заполнение полей профиля

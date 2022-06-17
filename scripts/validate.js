@@ -92,16 +92,16 @@ const isValid = (formElement, inputElement) => {
 
 // функция, закрывающая попап клавишей escape
 
-popups.forEach((popup) => {
-  const body = document.querySelector('.page')
-  body.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closePopup(popup);
-    }
-  });
-});
 
-// функция, закрывающая попап кликом на оверлей
+const keyEscHandler = e => {
+  popups.forEach((popup) => {
+  if (e.key === 'Escape') {
+    closePopup(popup)
+  }
+});
+};
+
+// обработчик, закрывающий попап кликом на оверлей
 
 popups.forEach((popup) => {
   popup.addEventListener('click', e => {
