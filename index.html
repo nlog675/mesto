@@ -63,8 +63,10 @@
                 Новое место
             </h2>
             <form name="profile" class="popup__form popup__form-add-card">
-                <input name="place-name" type="text" class="popup__input popup__input-place-name" placeholder="Название">
-                <input name="place-link" type="text" class="popup__input popup__input-place-link" placeholder="Ссылка на картинку">
+                <input id="place-name" name="place-name" type="text" class="popup__input popup__input-place-name" placeholder="Название" minlength="2" maxlength="30" required>
+                <span id="error-place-name" class="error-message"></span>
+                <input id="place-link" name="place-link" type="url" class="popup__input popup__input-place-link" placeholder="Ссылка на картинку" required>
+                <span id="error-place-link" class="error-message"></span>
                 <button type="submit" class="popup__button popup__card-add-btn">
                     Создать
                 </button>

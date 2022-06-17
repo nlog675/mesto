@@ -33,7 +33,7 @@ const popupAboutYou = document.querySelector('.popup__input-about');
 //const popupInputList = Array.from(document.querySelectorAll('.popup__input'));
 const profileName = document.querySelector('.profile__name');
 const profileAbout = document.querySelector('.profile__description');
-const formElement = document.querySelector('.popup__form-edit-profile');
+const formElement = document.querySelector('.popup__form');
 const addButton = document.querySelector('.profile__add-button');
 const popupAdd = document.querySelector('.popup-add');
 const popupPlaceName = document.querySelector('.popup__input-place-name');
@@ -108,7 +108,7 @@ function submitForm(e) {
 // });
 
 const formInput = document.querySelector('.popup__input');
-const formError = formElement.querySelector(`#error-${formInput.id}`);
+const formError = formElement.querySelector(`.${formInput.id}-error`);
 const isValid = (formElement, inputElement) => {
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage);
