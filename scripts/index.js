@@ -142,6 +142,8 @@ const createUsersCard = e => {
   const usersCard = createCard({name: popupPlaceName.value, link: popupPlaceLink.value});
   cardList.prepend(usersCard);
   closePopup(popupAdd);
+  const submitButton = document.querySelector('.popup__card-add-btn');
+  deactiveButton(submitButton, validationSettings);
 };
 
 formElementAdd.addEventListener('submit', createUsersCard);

@@ -90,6 +90,13 @@ formElement.addEventListener('submit', function(e) {
   e.preventDefault();
 });
 
+//функция, делающая кнопку неактивной после закрытия попапа
+
+const deactiveButton = (buttonElement, validationSettings) => {
+  buttonElement.classList.add(validationSettings.inactiveButtonClass);
+  buttonElement.disabled = true;
+}
+
 
 
 enableValidation(validationSettings);
