@@ -154,3 +154,23 @@ popups.forEach((popup) => {
     }
   });
 });
+
+// функция, закрывающая попап клавишей escape
+
+const keyEscHandler = e => {
+  popups.forEach((popup) => {
+  if (e.key === 'Escape') {
+    closePopup(popup)
+  }
+});
+};
+
+// обработчик, закрывающий попап кликом на оверлей
+
+popups.forEach((popup) => {
+  popup.addEventListener('click', e => {
+    if (e.target === e.currentTarget) {
+      closePopup(popup);
+    }
+  });
+});

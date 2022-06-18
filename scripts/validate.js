@@ -7,67 +7,17 @@ const validationSettings = ({
   errorClass: 'popup__error_visible'
 });
 
-const formInput = document.querySelector(validationSettings.inputSelector);
-const formError = formElement.querySelector(`.${formInput.id}-error`);
+// const formInput = document.querySelector(validationSettings.inputSelector);
+// const formError = formElement.querySelector(`.${formInput.id}-error`);
 
 // найти невалидный input
-
-const hasInvalidInput = inputList => {
-  return inputList.some((inputElement) => {
-    return !inputElement.validity.valid;
-  });
-};
-
-// переключение активности кнопки Submit
-
-const toggleButtonState = (inputList, buttonElement, validationSettings) => {
-  if (hasInvalidInput(inputList)) {
-    buttonElement.classList.add(validationSettings.inactiveButtonClass);
-    buttonElement.disabled = true;
-  } else {
-    buttonElement.classList.remove(validationSettings.inactiveButtonClass);
-    buttonElement.disabled = false;
-  }
-};
-
-// универсальная функция добавления обработчика всем полям формы
-
-const setEventListeners = (formElement, validationSettings) => {
-  const inputList = Array.from(formElement.querySelectorAll(validationSettings.inputSelector));
-  const buttonElement = formElement.querySelector(validationSettings.submitButtonSelector);
-  toggleButtonState(inputList,buttonElement);
-  inputList.forEach((inputElement) => {
-    inputElement.addEventListener('input', () => {
-      isValid(formElement, inputElement);
-      toggleButtonState(inputList,buttonElement);
-    });
-  });
-};
-
-// функция перебора всех полей на странице
-
-const enableValidation = (validationSettings) => {
-  const formList = Array.from(document.querySelectorAll(validationSettings.formSelector));
-  formList.forEach((formElement) => {
-    formElement.addEventListener('submit', e => {
-      e.preventDefault();
-    });
-    setEventListeners(formElement);
-  });
-};
-
-// отмена стандартного поведения кнопки
-
-formElement.addEventListener('submit', function(e) {
-  e.preventDefault();
-});
 
 // функция, показывающая ошибку ввода
 
 const showInputError = (formElement, inputElement, errorMessage, validationSettings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  errorElement.textContent = errorMessage;
   inputElement.classList.add(validationSettings.inputErrorClass);
+  errorElement.textContent = errorMessage;
   errorElement.classList.add(validationSettings.errorClass);
 };
 
@@ -82,33 +32,64 @@ const hideInputError = (formElement, inputElement, validationSettings) => {
 
 // функция, проверяющая валидность полей
 
-const isValid = (formElement, inputElement) => {
+const isValid = (formElement, inputElement, validationSettings) => {
   if (!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, inputElement.validationMessage);
+    showInputError(formElement, inputElement, inputElement.validationMessage, validationSettings);
   } else {
-    hideInputError(formElement, inputElement);
+    hideInputError(formElement, inputElement, validationSettings);
   }
 };
 
-// функция, закрывающая попап клавишей escape
-
-
-const keyEscHandler = e => {
-  popups.forEach((popup) => {
-  if (e.key === 'Escape') {
-    closePopup(popup)
-  }
-});
-};
-
-// обработчик, закрывающий попап кликом на оверлей
-
-popups.forEach((popup) => {
-  popup.addEventListener('click', e => {
-    if (e.target === e.currentTarget) {
-      closePopup(popup);
-    }
+const hasInvalidInput = inputList => {
+  return inputList.some((inputElement) => {
+    return !inputElement.validity.valid;
   });
+};
+
+// переключение активности кнопки Submit
+
+const toggleButtonState = (inputList, buttonElement, validationSettings) => {
+  if (hasInvalidInput(inputList, validationSettings)) {
+    buttonElement.classList.add(validationSettings.inactiveButtonClass);
+    buttonElement.disabled = true;
+  } else {
+    buttonElement.classList.remove(validationSettings.inactiveButtonClass);
+    buttonElement.disabled = false;
+  }
+};
+
+// универсальная функция добавления обработчика всем полям формы
+
+const setEventListeners = (formElement, validationSettings) => {
+  const inputList = Array.from(formElement.querySelectorAll(validationSettings.inputSelector));
+  const buttonElement = formElement.querySelector(validationSettings.submitButtonSelector);
+  toggleButtonState(inputList,buttonElement, validationSettings);
+  inputList.forEach((inputElement) => {
+    inputElement.addEventListener('input', () => {
+      isValid(formElement, inputElement, validationSettings);
+      toggleButtonState(inputList,buttonElement, validationSettings);
+    });
+  });
+};
+
+// функция перебора всех полей на странице
+
+const enableValidation = (validationSettings) => {
+  const formList = Array.from(document.querySelectorAll(validationSettings.formSelector));
+  formList.forEach((formElement) => {
+    formElement.addEventListener('submit', e => {
+      e.preventDefault();
+    });
+    setEventListeners(formElement, validationSettings);
+  });
+};
+
+// отмена стандартного поведения кнопки
+
+formElement.addEventListener('submit', function(e) {
+  e.preventDefault();
 });
+
+
 
 enableValidation(validationSettings);
