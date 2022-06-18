@@ -20,7 +20,7 @@ const hasInvalidInput = inputList => {
 
 // переключение активности кнопки Submit
 
-const toggleButtonState = (inputList, buttonElement) => {
+const toggleButtonState = (inputList, buttonElement, validationSettings) => {
   if (hasInvalidInput(inputList)) {
     buttonElement.classList.add(validationSettings.inactiveButtonClass);
     buttonElement.disabled = true;
@@ -32,7 +32,7 @@ const toggleButtonState = (inputList, buttonElement) => {
 
 // универсальная функция добавления обработчика всем полям формы
 
-const setEventListeners = formElement => {
+const setEventListeners = (formElement, validationSettings) => {
   const inputList = Array.from(formElement.querySelectorAll(validationSettings.inputSelector));
   const buttonElement = formElement.querySelector(validationSettings.submitButtonSelector);
   toggleButtonState(inputList,buttonElement);
@@ -46,7 +46,7 @@ const setEventListeners = formElement => {
 
 // функция перебора всех полей на странице
 
-const enableValidation = () => {
+const enableValidation = (validationSettings) => {
   const formList = Array.from(document.querySelectorAll(validationSettings.formSelector));
   formList.forEach((formElement) => {
     formElement.addEventListener('submit', e => {
@@ -64,7 +64,7 @@ formElement.addEventListener('submit', function(e) {
 
 // функция, показывающая ошибку ввода
 
-const showInputError = (formElement, inputElement, errorMessage) => {
+const showInputError = (formElement, inputElement, errorMessage, validationSettings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   errorElement.textContent = errorMessage;
   inputElement.classList.add(validationSettings.inputErrorClass);
@@ -73,7 +73,7 @@ const showInputError = (formElement, inputElement, errorMessage) => {
 
 // функция, скрывающая ошибку ввода
 
-const hideInputError = (formElement, inputElement) => {
+const hideInputError = (formElement, inputElement, validationSettings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.remove(validationSettings.inputErrorClass);
   errorElement.classList.remove(validationSettings.errorClass);
