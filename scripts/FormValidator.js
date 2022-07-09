@@ -69,18 +69,18 @@ _toggleButtonState() {
         });
     };
 
-    // deadctiveButton() {
-    //     this._buttonElement.classList.add(this._inactiveButtonClass);
-    //     this._buttonElement.disabled = true;
-    // }
+    resetValidation() {
+        this._toggleButtonState();
+
+        this._inputList.forEach((inputElement) => {
+            this._hideInputError(inputElement);
+        });
+    };
 
     enableValidation() {
         this._formList = Array.from(document.querySelectorAll(this._formSelector));
-        this._formList.forEach((formElement) => {
-          formElement.addEventListener('submit', e => {
-            e.preventDefault();
-          });
-          this._setEventListeners(this._formElement);
+        this._formList.forEach(() => {
+          this._setEventListeners();
         });
       };
 };
