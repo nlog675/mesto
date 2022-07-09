@@ -11,10 +11,10 @@
     visibility: hidden;
     opacity: 0;
     transition: .5s;
-};
+}
 
 .popup_isOpen {
     visibility: visible;
     opacity: 1;
     transition: .5s;
-};
+}
