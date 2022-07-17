@@ -1,6 +1,7 @@
 import Card from "./Card.js";
 import FormValidator from "./FormValidator.js";
 import Section from "./Section.js";
+import Popup from "./Popup.js";
 
 
 const initialCards = [
@@ -84,15 +85,35 @@ const initialCards = [
 // });
 
 //открытие и закрытие попапов
-const openPopup = (popup) => {
-    popup.classList.add('popup_isOpen');
-    document.addEventListener('keydown', keyEscHandler);
-};
+// const openPopup = (popup) => {
+//     popup.classList.add('popup_isOpen');
+//     document.addEventListener('keydown', keyEscHandler);
+// };
 
-const closePopup = (popup) => {
-    popup.classList.remove('popup_isOpen');
-    document.removeEventListener('keydown', keyEscHandler);
-};
+// const closePopup = (popup) => {
+//     popup.classList.remove('popup_isOpen');
+//     document.removeEventListener('keydown', keyEscHandler);
+// };
+
+const userPopup = new Popup(popupEdit);
+userPopup.setEventListeners();
+
+const cardPopup = new Popup(popupAdd);
+cardPopup.setEventListeners();
+
+buttonEdit.addEventListener('click', () => {
+  userPopup.open();
+  getProfileInputs();
+});
+
+buttonAdd.addEventListener('click', () => {
+  cardPopup.open();
+  formElementAdd.reset();
+  formValidatorAdd.resetValidation();
+});
+
+
+
 
 //заполнение полей профиля
 function getProfileInputs() {
@@ -117,17 +138,6 @@ function submitForm(e) {
   //обработчики событий
 formElement.addEventListener('submit', submitForm);
 
-buttonEdit.addEventListener('click', () => {
-    openPopup(popupEdit);
-    getProfileInputs();
-});
-
-buttonAdd.addEventListener('click', () => {
-    openPopup(popupAdd);
-    formElementAdd.reset();
-    formValidatorAdd.resetValidation();
-});
-
 //добавление пользовательской карточки
 const createUsersCard = e => {
     e.preventDefault()
@@ -139,32 +149,32 @@ const createUsersCard = e => {
   formElementAdd.addEventListener('submit', createUsersCard);
 
   //обработчик события закрытия любого попапа
-popups.forEach((popup) => {
-    popup.addEventListener('click', e => {
-      if (e.target.classList.contains('popup__close')) {
-        closePopup(popup);
-      }
-    });
-  });
+// popups.forEach((popup) => {
+//     popup.addEventListener('click', e => {
+//       if (e.target.classList.contains('popup__close')) {
+//         closePopup(popup);
+//       }
+//     });
+//   });
 
   // функция, закрывающая попап клавишей escape
 
-const keyEscHandler = e => {
-    if (e.key === 'Escape') {
-      const openedPopup = document.querySelector('.popup_isOpen');
-      closePopup(openedPopup);
-    };
-  };
+// const keyEscHandler = e => {
+//     if (e.key === 'Escape') {
+//       const openedPopup = document.querySelector('.popup_isOpen');
+//       closePopup(openedPopup);
+//     };
+//   };
   
   // обработчик, закрывающий попап кликом на оверлей
   
-  popups.forEach((popup) => {
-    popup.addEventListener('mousedown', e => {
-      if (e.target === e.currentTarget) {
-        closePopup(popup);
-      }
-    });
-  });
+  // popups.forEach((popup) => {
+  //   popup.addEventListener('mousedown', e => {
+  //     if (e.target === e.currentTarget) {
+  //       closePopup(popup);
+  //     }
+  //   });
+  // });
 
   const formValidatorAdd = new FormValidator(validationSettings, popupAdd);
   const formValidatorEdit = new FormValidator(validationSettings, popupEdit);
