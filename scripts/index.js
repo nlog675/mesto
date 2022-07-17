@@ -1,5 +1,7 @@
 import Card from "./Card.js";
-import FormValidator from "./FormValidator.js"
+import FormValidator from "./FormValidator.js";
+import Section from "./Section.js";
+
 
 const initialCards = [
     {
@@ -65,21 +67,21 @@ const initialCards = [
     openPopup(popupPicture);
 };
 
-const createCard = (item) => {
-    const card = new Card(item, '.template-item', zoomPic);
-    const cardEl = card.render();
+// const createCard = (item) => {
+//     const card = new Card(item, '.template-item', zoomPic);
+//     const cardEl = card.render();
     
-    return cardEl;
-};
+//     return cardEl;
+// };
 
-const addCard = (cardList, card) => {
-    cardList.append(card);
-};
+// const addCard = (cardList, card) => {
+//     cardList.append(card);
+// };
 
-initialCards.forEach((element) => {
-    const newCard = createCard(element);
-    addCard(cardList, newCard);
-});
+// initialCards.forEach((element) => {
+//     const newCard = createCard(element);
+//     addCard(cardList, newCard);
+// });
 
 //открытие и закрытие попапов
 const openPopup = (popup) => {
@@ -168,3 +170,18 @@ const keyEscHandler = e => {
   const formValidatorEdit = new FormValidator(validationSettings, popupEdit);
   formValidatorAdd.enableValidation()
   formValidatorEdit.enableValidation();
+
+
+
+  const prerenderedCards = new Section ({ 
+    items: initialCards, 
+    renderer: (item) => {
+      const card = new Card(item, '.template-item', zoomPic);
+      const cardEl = card.render();
+      prerenderedCards.addItem(cardEl)
+  },
+}, '.elements__list');
+
+
+  prerenderedCards.renderItems();
+

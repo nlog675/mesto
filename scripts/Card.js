@@ -1,4 +1,4 @@
-class Card {
+export default class Card {
     constructor(data, cardSelector, zoomPic) {
         this._cardName = data.name;
         this._cardPic = data.link;
@@ -51,5 +51,3 @@ class Card {
     };
 
 };
-
-export default Card;
