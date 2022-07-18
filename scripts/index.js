@@ -45,7 +45,7 @@ const initialCards = [
   const popupPlaceLink = document.querySelector('.popup__input-place-link');
   const cardList = document.querySelector('.elements__list');
   const formElementAdd = document.querySelector('.popup__form-add-card');
-  const popupPicture = document.querySelector('.popup-picture');
+  
   const popupImageSrc = document.querySelector('.popup__image');
   const popupImageName = document.querySelector('.popup__caption');
   const popups = document.querySelectorAll('.popup');
@@ -59,14 +59,6 @@ const initialCards = [
     inputErrorClass: 'popup__input_type_error',
     errorClass: 'popup__error_visible'
   });
-
-  
-  const zoomPic = (link, name) => {
-    popupImageSrc.src = link;
-    popupImageName.textContent = name;
-    popupImageSrc.alt = name;
-    openPopup(popupPicture);
-};
 
 // const createCard = (item) => {
 //     const card = new Card(item, '.template-item', zoomPic);
@@ -111,6 +103,16 @@ buttonAdd.addEventListener('click', () => {
   formElementAdd.reset();
   formValidatorAdd.resetValidation();
 });
+
+
+
+
+// const zoomPic = (link, name) => {
+//   popupImageSrc.src = link;
+//   popupImageName.textContent = name;
+//   popupImageSrc.alt = name;
+//   openPopup(popupPicture);
+// };
 
 
 
@@ -186,7 +188,7 @@ const createUsersCard = e => {
   const prerenderedCards = new Section ({ 
     items: initialCards, 
     renderer: (item) => {
-      const card = new Card(item, '.template-item', zoomPic);
+      const card = new Card(item, '.template-item');
       const cardEl = card.render();
       prerenderedCards.addItem(cardEl)
   },

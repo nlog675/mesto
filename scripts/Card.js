@@ -1,9 +1,10 @@
+import PopupWithImage from "./PopupWithImage.js";
+
 export default class Card {
-    constructor(data, cardSelector, zoomPic) {
+    constructor(data, cardSelector) {
         this._cardName = data.name;
         this._cardPic = data.link;
         this._cardSelector = cardSelector;
-        this._zoomPic = zoomPic;
     };
 
     _getTemplate() {
@@ -25,7 +26,11 @@ export default class Card {
         this._cardLikeButton.addEventListener('click', () => this._likeCard());
 
         this._itemImage.addEventListener('click', () => {
-            this._zoomPic(this._cardPic, this._cardName);
+            const popupPicture = document.querySelector('.popup-picture');
+            const popupWithImage = new PopupWithImage(popupPicture);
+            popupWithImage.open(this._cardPic, this._cardName);
+
+            popupWithImage.setEventListeners();
         });
     };
 
