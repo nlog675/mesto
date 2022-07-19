@@ -2,6 +2,7 @@ import Card from "./Card.js";
 import FormValidator from "./FormValidator.js";
 import Section from "./Section.js";
 import Popup from "./Popup.js";
+import popupWithForm from "./PopupWithForm.js";
 
 
 const initialCards = [
@@ -98,11 +99,41 @@ buttonEdit.addEventListener('click', () => {
   getProfileInputs();
 });
 
+// buttonAdd.addEventListener('click', () => {
+//   cardPopup.open();
+//   formElementAdd.reset();
+//   formValidatorAdd.resetValidation();
+// });
+
+const createCard = new popupWithForm({
+  popupSelector: popupAdd, 
+  handleFormSubmit: (formData) => {
+    const userCard = new Card(formData, '.template-item');
+    const element = userCard.render();
+
+    cardList.prepend(element);
+  }
+});
+
+createCard.setEventListeners();
+
 buttonAdd.addEventListener('click', () => {
   cardPopup.open();
   formElementAdd.reset();
   formValidatorAdd.resetValidation();
 });
+
+
+
+//добавление пользовательской карточки
+// const createUsersCard = e => {
+//   e.preventDefault()
+//   const usersCard = createCard({name: popupPlaceName.value, link: popupPlaceLink.value});
+//   cardList.prepend(usersCard);
+//   closePopup(popupAdd);
+// };
+
+// formElementAdd.addEventListener('submit', createUsersCard);
 
 
 
@@ -124,10 +155,10 @@ function getProfileInputs() {
 };
 
 //заполнение полей добавления картинки
-function getPlaceInputs() {
-    popupPlaceName.value = popupPlaceName.textContent;
-    popupPlaceLink.value = popupPlaceLink.textContent;
-  };
+// function getPlaceInputs() {
+//     popupPlaceName.value = popupPlaceName.textContent;
+//     popupPlaceLink.value = popupPlaceLink.textContent;
+//   };
 
   //сабмит формы профиля
 function submitForm(e) {
@@ -138,17 +169,11 @@ function submitForm(e) {
   };
 
   //обработчики событий
-formElement.addEventListener('submit', submitForm);
+// formElement.addEventListener('submit', submitForm);
 
-//добавление пользовательской карточки
-const createUsersCard = e => {
-    e.preventDefault()
-    const usersCard = createCard({name: popupPlaceName.value, link: popupPlaceLink.value});
-    cardList.prepend(usersCard);
-    closePopup(popupAdd);
-  };
 
-  formElementAdd.addEventListener('submit', createUsersCard);
+
+  
 
   //обработчик события закрытия любого попапа
 // popups.forEach((popup) => {
