@@ -1,4 +1,4 @@
-import Popup from "./Popup.js";
+import Popup from "../components/Popup.js";
 
 export default class popupWithForm extends Popup {
   constructor({popupSelector, handleFormSubmit}) {
@@ -14,7 +14,7 @@ export default class popupWithForm extends Popup {
     });
 
     return this._formValues;
-  }
+  };
 
   setEventListeners() {
     this._popupSelector.addEventListener('submit', e => {
@@ -27,12 +27,12 @@ export default class popupWithForm extends Popup {
       if (e.target.classList.contains('popup__close')) {
         this.close();
       }
-    })
-  }
+    });
+  };
 
   close() {
     this._popupSelector.classList.remove('popup_isOpen');
     this._popupSelector.querySelector('.popup__form').reset();
     document.removeEventListener('keydown', this._handleEscClose);
-  }
-}
+  };
+};

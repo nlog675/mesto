@@ -13,7 +13,7 @@ export default class Card {
             name: this._cardName,
             link: this._cardPic,
         })
-    }
+    };
 
     _getTemplate() {
         const cardEl = document
