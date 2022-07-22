@@ -5,17 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mesto</title>
-    <link rel="icon" href="favicon.ico">
-    <link rel="stylesheet" href="./pages/index.css">
+    <link rel="icon" href="./favicon.icon">
 </head>
 <body class="page">
     <header class="header">
-        <img src="./images/logo.svg" alt="Логотип" class="header__logo">
+        <img src="<%=require('./images/logo.svg')%>" alt="Логотип" class="header__logo">
     </header>
 
     <main class="content">
         <section class="profile">
-            <img src="./images/avatar.jpg" alt="Аватар автора" class="profile__avatar">
+            <img src="<%=require('./images/avatar.jpg')%>" alt="Аватар автора" class="profile__avatar">
             <div class="profile__info">
                 <div class="profile__container">
                     <h1 class="profile__name">Жак-Ив Кусто</h1>
@@ -104,6 +103,5 @@
         </li>
     </template>
 
-    <script src="./pages/index.js" type="module"></script>
 </body>
 </html>
