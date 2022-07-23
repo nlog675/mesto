@@ -9,3 +9,4 @@ export const popupAdd = document.querySelector('.popup-add');
 export const cardList = document.querySelector('.elements__list');
 export const formElementAdd = document.querySelector('.popup__form-add-card');
 export const popupEditSubmitButton = document.querySelector('.popup__profile-edit-btn');
+export const popupPicture = document.querySelector('.popup-picture');

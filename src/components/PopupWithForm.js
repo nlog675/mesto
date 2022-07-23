@@ -1,6 +1,6 @@
 import Popup from "./Popup.js";
 
-export default class popupWithForm extends Popup {
+export default class PopupWithForm extends Popup {
   constructor({popupSelector, handleFormSubmit}) {
     super(popupSelector);
     this._handleFormSubmit = handleFormSubmit;
@@ -22,17 +22,10 @@ export default class popupWithForm extends Popup {
       this._handleFormSubmit(this._getInputValues());
       this.close();
     });
-
-    this._popupSelector.addEventListener('click', e => {
-      if (e.target.classList.contains('popup__close')) {
+    this._popupSelector.addEventListener('mousedown', e => {
+      if (e.target.classList.contains('popup__close') || e.target === e.currentTarget) {
         this.close();
       }
     });
-  };
-
-  close() {
-    this._popupSelector.classList.remove('popup_isOpen');
-    this._popupSelector.querySelector('.popup__form').reset();
-    document.removeEventListener('keydown', this._handleEscClose);
   };
 };

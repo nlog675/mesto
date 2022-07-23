@@ -1,18 +1,14 @@
-import PopupWithImage from "./PopupWithImage.js";
+import { data } from "autoprefixer";
+import { popupPicture } from "../utils/constants";
+import PopupWithImage from "./PopupWithImage";
+import {popupWithImage} from "../pages/index.js"
 
 export default class Card {
-    constructor(data, cardSelector, handleCardClick) {
-        this._cardName = data.name;
-        this._cardPic = data.link;
+    constructor({ name, link }, cardSelector, handleCardClick) {
+        this._cardName = name;
+        this._cardPic = link;
         this._cardSelector = cardSelector;
         this._handleCardClick = handleCardClick;
-    };
-
-    _handleCardClick() {
-        this._handleCardClick({
-            name: this._cardName,
-            link: this._cardPic,
-        })
     };
 
     _getTemplate() {
@@ -33,14 +29,18 @@ export default class Card {
 
         this._cardLikeButton.addEventListener('click', () => this._likeCard());
 
-        this._itemImage.addEventListener('click', () => {
-            const popupPicture = document.querySelector('.popup-picture');
-            const popupWithImage = new PopupWithImage(popupPicture);
-            popupWithImage.open(this._cardPic, this._cardName);
+        this._itemImage.addEventListener('click', () => this._handleCardClick(this._cardName, this._cardPic));
 
-            popupWithImage.setEventListeners();
-        });
+        // this._itemImage.addEventListener('click', () => {
+        //     const popupPicture = document.querySelector('.popup-picture');
+        //     const popupWithImage = new PopupWithImage(popupPicture);
+        //     popupWithImage.open(this._cardPic, this._cardName);
+
+        //     popupWithImage.setEventListeners();
+        // });
     };
+
+   
 
     _deleteCard() {
         this._element.remove();
