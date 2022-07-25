@@ -25,6 +25,7 @@ import {
   popupPicture
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
+import { data } from "autoprefixer";
 
 
 
@@ -38,6 +39,7 @@ const validationSettings = ({
 });
 
 const popupWithImage = new PopupWithImage(popupPicture);
+
 popupWithImage.setEventListeners();
 
 const userInfo = new UserInfo(profileName, profileAbout);
@@ -58,34 +60,22 @@ buttonEdit.addEventListener('click', () => {
 });
 
 function handleCardClick(name, link) {
-  popupWithImage.open(name, link);
+  popupWithImage.open(name, link)
 }
 
-const createCard = ({name, link}, cardSelector, handleCardClick) => {
-  const userCard = new Card({name, link}, cardSelector, handleCardClick);
-  const element = userCard.render();
-  return element;
+function handleCreateCard(data) {
+  const userCard = new Card(data, '.template-item', handleCardClick).render();
+
+  return userCard;
 }
-
-
 
 const popupCard = new PopupWithForm({
   popupSelector: popupAdd,
   handleFormSubmit: (formData) => {
-    const element = createCard(formData, '.template-item', handleCardClick);
+    const element = handleCreateCard(formData, '.template-item');
     cardList.prepend(element);
   }
 })
-
-// const popupCard = new popupWithForm({
-//   popupSelector: popupAdd, 
-//   handleFormSubmit: (formData) => {
-//     const userCard = new Card(formData, '.template-item');
-//     const element = userCard.render();
-
-//     cardList.prepend(element);
-//   }
-// });
 
 popupCard.setEventListeners();
 
@@ -105,8 +95,7 @@ formValidatorEdit.enableValidation();
 const cardsContainer = new Section ({ 
   items: initialCards, 
   renderer: (item) => {
-    const card = new Card(item, '.template-item');
-    const cardEl = card.render();
+    const cardEl = handleCreateCard(item);
     cardsContainer.addItem(cardEl)
   },
 }, '.elements__list');

@@ -4,9 +4,8 @@ import PopupWithImage from "./PopupWithImage";
 import {popupWithImage} from "../pages/index.js"
 
 export default class Card {
-    constructor({ name, link }, cardSelector, handleCardClick) {
-        this._cardName = name;
-        this._cardPic = link;
+    constructor(data, cardSelector, handleCardClick) {
+        this._data = data;
         this._cardSelector = cardSelector;
         this._handleCardClick = handleCardClick;
     };
@@ -29,18 +28,8 @@ export default class Card {
 
         this._cardLikeButton.addEventListener('click', () => this._likeCard());
 
-        this._itemImage.addEventListener('click', () => this._handleCardClick(this._cardName, this._cardPic));
-
-        // this._itemImage.addEventListener('click', () => {
-        //     const popupPicture = document.querySelector('.popup-picture');
-        //     const popupWithImage = new PopupWithImage(popupPicture);
-        //     popupWithImage.open(this._cardPic, this._cardName);
-
-        //     popupWithImage.setEventListeners();
-        // });
+        this._itemImage.addEventListener('click', () => this._handleCardClick(this._data.name, this._data.link));
     };
-
-   
 
     _deleteCard() {
         this._element.remove();
@@ -54,9 +43,9 @@ export default class Card {
     render() {
         this._element = this._getTemplate();
         this._itemImage = this._element.querySelector('.elements__item-image');
-        this._itemImage.src = this._cardPic;
-        this._element.querySelector('.elements__card-heading').textContent = this._cardName;
-        this._itemImage.alt = this._cardName;
+        this._itemImage.src = this._data.link;
+        this._element.querySelector('.elements__card-heading').textContent = this._data.name;
+        this._itemImage.alt = this._data.name;
         
         this._addEventListeners();
 
