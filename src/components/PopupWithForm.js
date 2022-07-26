@@ -22,10 +22,11 @@ export default class PopupWithForm extends Popup {
       this._handleFormSubmit(this._getInputValues());
       this.close();
     });
-    this._popupSelector.addEventListener('mousedown', e => {
-      if (e.target.classList.contains('popup__close') || e.target === e.currentTarget) {
-        this.close();
-      }
-    });
+    // this._popupSelector.addEventListener('mousedown', e => {
+    //   if (e.target.classList.contains('popup__close') || e.target === e.currentTarget) {
+    //     this.close();
+    //   }
+    // });
+    super.setEventListeners();
   };
 };
