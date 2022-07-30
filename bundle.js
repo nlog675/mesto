@@ -23024,15 +23024,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Card_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Card.js */ "./src/components/Card.js");
 /* harmony import */ var _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormValidator.js */ "./src/components/FormValidator.js");
 /* harmony import */ var _components_Section_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Section.js */ "./src/components/Section.js");
-/* harmony import */ var _components_Popup_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Popup.js */ "./src/components/Popup.js");
-/* harmony import */ var _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/PopupWithForm.js */ "./src/components/PopupWithForm.js");
-/* harmony import */ var _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/UserInfo.js */ "./src/components/UserInfo.js");
-/* harmony import */ var _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/PopupWithImage.js */ "./src/components/PopupWithImage.js");
-/* harmony import */ var _utils_initialCards_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/initialCards.js */ "./src/utils/initialCards.js");
-/* harmony import */ var _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/constants.js */ "./src/utils/constants.js");
-/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! autoprefixer */ "./node_modules/autoprefixer/lib/autoprefixer.js");
-/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(autoprefixer__WEBPACK_IMPORTED_MODULE_10__);
-
+/* harmony import */ var _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/PopupWithForm.js */ "./src/components/PopupWithForm.js");
+/* harmony import */ var _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/UserInfo.js */ "./src/components/UserInfo.js");
+/* harmony import */ var _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/PopupWithImage.js */ "./src/components/PopupWithImage.js");
+/* harmony import */ var _utils_initialCards_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/initialCards.js */ "./src/utils/initialCards.js");
+/* harmony import */ var _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/constants.js */ "./src/utils/constants.js");
+/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! autoprefixer */ "./node_modules/autoprefixer/lib/autoprefixer.js");
+/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(autoprefixer__WEBPACK_IMPORTED_MODULE_9__);
 
 
 
@@ -23059,23 +23057,23 @@ const validationSettings = ({
   errorClass: 'popup__error_visible'
 });
 
-const popupWithImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_7__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupPicture);
+const popupWithImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_6__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupPicture);
 
 popupWithImage.setEventListeners();
 
-const userInfo = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_6__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.profileName, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.profileAbout);
+const userInfo = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.profileName, _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.profileAbout);
 
-const popupProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_5__["default"]({
-  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupEdit,
+const popupProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupEdit,
   handleFormSubmit: data => userInfo.setUserInfo(data)
 });
 
 popupProfile.setEventListeners();
 
-_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.buttonEdit.addEventListener('click', () => {
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.buttonEdit.addEventListener('click', () => {
   const getInputValues = userInfo.getUserInfo();
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupYourName.value = getInputValues.inputName;
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupAboutYou.value = getInputValues.inputAbout;
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupYourName.value = getInputValues.inputName;
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupAboutYou.value = getInputValues.inputAbout;
   formValidatorEdit.resetValidation()
   popupProfile.open();
 });
@@ -23090,39 +23088,61 @@ function handleCreateCard(data) {
   return userCard;
 }
 
-const popupCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_5__["default"]({
-  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupAdd,
+const popupCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupAdd,
   handleFormSubmit: (formData) => {
     const element = handleCreateCard(formData, '.template-item');
-    _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.cardList.prepend(element);
+    _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.cardList.prepend(element);
   }
 })
 
 popupCard.setEventListeners();
 
-_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.buttonAdd.addEventListener('click', () => {
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.formElementAdd.reset();
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.buttonAdd.addEventListener('click', () => {
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.formElementAdd.reset();
   formValidatorAdd.resetValidation();
   popupCard.open();
 });
 
-const formValidatorAdd = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupAdd);
-const formValidatorEdit = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupEdit);
+const formValidatorAdd = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupAdd);
+const formValidatorEdit = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupEdit);
 formValidatorAdd.enableValidation();
 formValidatorEdit.enableValidation();
 
 
 
 const cardsContainer = new _components_Section_js__WEBPACK_IMPORTED_MODULE_3__["default"] ({ 
-  items: _utils_initialCards_js__WEBPACK_IMPORTED_MODULE_8__.initialCards, 
+  items: _utils_initialCards_js__WEBPACK_IMPORTED_MODULE_7__.initialCards, 
   renderer: (item) => {
     const cardEl = handleCreateCard(item);
     cardsContainer.addItem(cardEl)
   },
 }, '.elements__list');
 
-
 cardsContainer.renderItems();
+
+
+
+
+
+
+
+fetch('https://mesto.nomoreparties.co/v1/cohort-47/cards', {
+  headers: {
+    authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
+  }
+})
+  .then(res => res.json())
+  .then((result) => {
+    console.log(result);
+  }); 
+
+fetch ('https://nomoreparties.co/v1/cohort-47/users/me', {
+  method: 'GET',
+  headers: {
+    authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
+  }
+})
 
 /***/ }),
 
