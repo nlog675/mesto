@@ -47,3 +47,5 @@
 @import url(../blocks/popup/__form-label/popup__form-label.css);
 @import url(../blocks/popup/__error/popup__error.css);
 @import url(../blocks/popup/__error/_visible/popup__error_visible.css);
+
+@import url(../blocks/elements/__card-like-counter/elements__card-like-counter.css);

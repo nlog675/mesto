@@ -3,7 +3,6 @@ import "./index.css";
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
-import Popup from "../components/Popup.js";
 import popupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
 import PopupWithImage from "../components/PopupWithImage.js";
@@ -100,5 +99,34 @@ const cardsContainer = new Section ({
   },
 }, '.elements__list');
 
-
 cardsContainer.renderItems();
+
+
+
+
+
+
+
+// fetch('https://mesto.nomoreparties.co/v1/cohort-47/cards', {
+//   headers: {
+//     authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
+//   }
+// })
+//   .then(res => res.json())
+//   .then((result) => {
+//     console.log(result);
+//   }); 
+
+
+function getProfile() {
+  fetch ('https://nomoreparties.co/v1/cohort-47/users/me', {
+    method: 'GET',
+    headers: {
+      authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
+    }
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+    })
+}
