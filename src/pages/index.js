@@ -25,6 +25,8 @@ import {
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import { data } from "autoprefixer";
+import Api from "../components/Api.js"
+import { API } from "../utils/constants.js";
 
 
 
@@ -43,9 +45,35 @@ popupWithImage.setEventListeners();
 
 const userInfo = new UserInfo(profileName, profileAbout);
 
+
+
+const api = new Api(API);
+
+let userId
+
+api.getProfile()
+  .then(user => {
+    userInfo.setUserInfo(user)
+    userId = user._id
+  });
+
+  api.getCard()
+    .then(data => {
+      cardsContainer.renderItems(data)
+    })
+
+
+
+
 const popupProfile = new popupWithForm({
   popupSelector: popupEdit,
-  handleFormSubmit: data => userInfo.setUserInfo(data)
+  handleFormSubmit: inputValues => {
+    api.editProfile(inputValues)
+      .then(() => {
+        userInfo.setUserInfo(inputValues)
+        popupProfile.close()
+      })
+  }
 });
 
 popupProfile.setEventListeners();
@@ -63,16 +91,29 @@ function handleCardClick(name, link) {
 }
 
 function handleCreateCard(data) {
-  const userCard = new Card(data, '.template-item', handleCardClick).render();
+  const userCard = new Card(data, '.template-item', handleCardClick, userId).render();
 
   return userCard;
 }
 
+// const popupCard = new PopupWithForm({
+//   popupSelector: popupAdd,
+//   handleFormSubmit: (formData) => {
+//     const element = handleCreateCard(formData, '.template-item');
+//     cardList.prepend(element);
+//   }
+// })
+
 const popupCard = new PopupWithForm({
   popupSelector: popupAdd,
-  handleFormSubmit: (formData) => {
-    const element = handleCreateCard(formData, '.template-item');
-    cardList.prepend(element);
+  handleFormSubmit: (FormData) => {
+    api.addCard(FormData)
+    .then((res) => {
+      const element = handleCreateCard(res);
+      // cardList.addItem(element)
+      cardList.prepend(element)
+    })
+    .catch(err => console.log(err))
   }
 })
 
@@ -92,41 +133,7 @@ formValidatorEdit.enableValidation();
 
 
 const cardsContainer = new Section ({ 
-  items: initialCards, 
   renderer: (item) => {
-    const cardEl = handleCreateCard(item);
-    cardsContainer.addItem(cardEl)
+    cardsContainer.addItem(handleCreateCard(item))
   },
 }, '.elements__list');
-
-cardsContainer.renderItems();
-
-
-
-
-
-
-
-// fetch('https://mesto.nomoreparties.co/v1/cohort-47/cards', {
-//   headers: {
-//     authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
-//   }
-// })
-//   .then(res => res.json())
-//   .then((result) => {
-//     console.log(result);
-//   }); 
-
-
-function getProfile() {
-  fetch ('https://nomoreparties.co/v1/cohort-47/users/me', {
-    method: 'GET',
-    headers: {
-      authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
-    }
-  })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log(res);
-    })
-}
