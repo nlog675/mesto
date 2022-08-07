@@ -91,9 +91,17 @@ function handleCardClick(name, link) {
 }
 
 function handleCreateCard(data) {
-  const userCard = new Card(data, '.template-item', handleCardClick, userId).render();
+  const userCard = new Card(data, '.template-item', handleCardClick, deleteCard, likeCard).render();
 
   return userCard;
+}
+
+function deleteCard(id) {
+  return api.deleteCard(id)
+}
+
+function likeCard(id) {
+  return api.likeCard(id)
 }
 
 // const popupCard = new PopupWithForm({

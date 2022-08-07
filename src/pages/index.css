@@ -49,3 +49,6 @@
 @import url(../blocks/popup/__error/_visible/popup__error_visible.css);
 
 @import url(../blocks/elements/__card-like-counter/elements__card-like-counter.css);
+@import url(../blocks/popup/__content-delete/popup__content-delete.css);
+@import url(../blocks/popup/__card-del-btn/popup__card-del-btn.css);
+

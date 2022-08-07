@@ -91,6 +91,17 @@
             <button type="button" class="popup__close popup__close-pic"></button>
         </div>
     </div>
+    <div class="popup popup-delete">
+        <div class="popup__content-delete">
+            <button type="button" class="popup__close popup__close-add"></button>
+            <h2 class="popup__title">
+                Вы уверены?
+            </h2>
+            <button type="submit" class="popup__button popup__card-del-btn">
+                Да
+            </button>
+        </div>
+    </div>
 <!-- шаблон карточки -->
     <template id="card" class="template-item">
         <li class="elements__item">
@@ -100,7 +111,7 @@
                 <h2 class="elements__card-heading"></h2>
                 <div>
                     <button type="button" class="elements__card-like"></button>
-                    <div class="elements__card-like-counter">1</div>
+                    <div class="elements__card-like-counter"></div>
                 </div>
             </div>
         </li>

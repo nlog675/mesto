@@ -2,6 +2,11 @@
 import { API } from "../utils/constants";
 
 export default class Api {
+  constructor() {
+    this._getResponse = this._getResponse.bind(this)
+    this._getHeaders = this._getHeaders.bind(this)
+  }
+
   _getResponse(res) {
     if (res.ok) {
       return res.json();
@@ -10,13 +15,17 @@ export default class Api {
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
+  _getHeaders() {
+    return {
+    authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4',
+    'Content-Type': 'application/json'
+    }
+  }
+
   getProfile() {
     return fetch(`${API}/users/me`, {
       method: 'GET',
-      headers: {
-        authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4',
-        'Content-Type': 'application/json'
-      }
+      headers: this._getHeaders()
     })
     .then((res) => this._getResponse(res))
     .catch(err => console.log(err))
@@ -26,10 +35,7 @@ export default class Api {
     return fetch(`${API}/cards`, {
       credentials: 'omit',
       method: 'GET',
-      headers: {
-        authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4',
-        'Content-Type': 'application/json'
-      }
+      headers: this._getHeaders()
     })
     .then((res) => this._getResponse(res))
     .catch(err => console.log(err))
@@ -38,10 +44,7 @@ export default class Api {
   editProfile(data) {
     return fetch(`${API}/users/me`, {
       method: 'PATCH',
-      headers: {
-        authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4',
-        'Content-Type': 'application/json'
-      },
+      headers: this._getHeaders,
       body: JSON.stringify({
         name: data.name,
         about: data.about
@@ -54,14 +57,30 @@ export default class Api {
   addCard(data) {
     return fetch(`${API}/cards`, {
       method: 'POST',
-      headers: {
-        authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4',
-        'Content-Type': 'application/json'
-      },
+      headers: this._getHeaders(),
       body: JSON.stringify({
         name: data.name,
         link: data.link
       })
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  likeCard(id) {
+    return fetch(`${API}/cards/${id}`, {
+      method: 'PATCH',
+      headers: this._getHeaders(),
+      body: JSON.stringify({liked: true})
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  deleteCard(id) {
+    return fetch(`${API}/cards/${id}`, {
+      method: 'DELETE',
+      headers: this._getHeaders()
     })
     .then((res) => this._getResponse(res))
     .catch(err => console.log(err))
