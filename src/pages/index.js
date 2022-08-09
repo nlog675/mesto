@@ -22,7 +22,11 @@ import {
   formElementAdd,
   cardList,
   popupPicture,
-  popupDeleteCard
+  popupDeleteCard,
+  popupUserAvatar,
+  avatarChangeButton,
+  profileAvatar,
+  formElementAvatar
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import { data } from "autoprefixer";
@@ -44,7 +48,7 @@ const validationSettings = ({
 const popupWithImage = new PopupWithImage(popupPicture);
 popupWithImage.setEventListeners();
 
-const userInfo = new UserInfo(profileName, profileAbout);
+const userInfo = new UserInfo(profileName, profileAbout, profileAvatar);
 
 
 const api = new Api(API);
@@ -53,8 +57,9 @@ let userId
 
 api.getProfile()
   .then(user => {
-    userInfo.setUserInfo(user)
-    userId = user._id
+    userInfo.setUserInfo(user);
+    userInfo.setNewAvatar(user);
+    userId = user._id;
   });
 
   api.getCard()
@@ -73,10 +78,31 @@ const popupProfile = new popupWithForm({
         userInfo.setUserInfo(inputValues)
         popupProfile.close()
       })
+      .catch((err) => console.log(err))
   }
 });
 
 popupProfile.setEventListeners();
+
+const popupAvatar = new PopupWithForm({
+  popupSelector: popupUserAvatar,
+  handleFormSubmit: data => {
+    api.changeAvatar(data.link)
+      .then((data) => {
+        userInfo.setNewAvatar(data);
+        popupAvatar.close();
+      })
+      .catch((err) => console.log(err))
+  }
+})
+
+popupAvatar.setEventListeners()
+
+avatarChangeButton.addEventListener('click', () => {
+  formElementAvatar.reset();
+  formValidatorAvatar.resetValidation()
+  popupAvatar.open()
+})
 
 buttonEdit.addEventListener('click', () => {
   const getInputValues = userInfo.getUserInfo();
@@ -91,7 +117,7 @@ function handleCardClick(name, link) {
 }
 
 function handleCreateCard(data) {
-  const userCard = new Card(data, '.template-item', handleCardClick, {handleDeleteCard}, likeCard).render();
+  const userCard = new Card(data, '.template-item', handleCardClick, {handleDeleteCard}, handleLikeCard, userId).render();
 
   return userCard;
 }
@@ -112,9 +138,13 @@ function handleDeleteCard(cardId) {
   })
 }
 
-function likeCard(id) {
-  return api.likeCard(id)
+function handleLikeCard(cardId) {
+  return api.likeCard(cardId)
 }
+
+// function likeCard(id) {
+//   return api.likeCard(id)
+// }
 
 const popupCard = new PopupWithForm({
   popupSelector: popupAdd,
@@ -138,8 +168,10 @@ buttonAdd.addEventListener('click', () => {
 
 const formValidatorAdd = new FormValidator(validationSettings, popupAdd);
 const formValidatorEdit = new FormValidator(validationSettings, popupEdit);
+const formValidatorAvatar = new FormValidator(validationSettings, popupUserAvatar);
 formValidatorAdd.enableValidation();
 formValidatorEdit.enableValidation();
+formValidatorAvatar.enableValidation();
 
 
 

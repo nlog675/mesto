@@ -77,13 +77,6 @@ _toggleButtonState() {
         });
     };
 
-    // enableValidation() {
-    //     this._formList = Array.from(document.querySelectorAll(this._formSelector));
-    //     this._formList.forEach(() => {
-    //       this._setEventListeners();
-    //     });
-    //   };
-
     enableValidation(formElement, validationSettings) {
         this._setEventListeners(formElement, validationSettings)
     }

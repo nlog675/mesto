@@ -51,4 +51,7 @@
 @import url(../blocks/elements/__card-like-counter/elements__card-like-counter.css);
 @import url(../blocks/popup/__content-delete/popup__content-delete.css);
 @import url(../blocks/popup/__card-del-btn/popup__card-del-btn.css);
+@import url(../blocks/profile/__button-change-avatar/profile__button-change-avatar.css);
+@import url(../blocks/popup/__content-avatar/popup__content-avatar.css);
+@import url(../blocks/popup/__form-add-avatar/popup__form-add-avatar.css);
 

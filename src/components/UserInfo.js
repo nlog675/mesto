@@ -1,9 +1,10 @@
 import {popupAboutYou, popupYourName, profileAbout, profileName} from '../utils/constants.js';
 
 export default class UserInfo {
-  constructor(profileName, profileAbout) {
+  constructor(profileName, profileAbout, profileAvatar) {
     this._profileName = profileName;
     this._profileAbout = profileAbout;
+    this._profileAvatar = profileAvatar;
   };
 
   getUserInfo() {
@@ -14,6 +15,10 @@ export default class UserInfo {
     }
     return this._userInfo;
   };
+
+  setNewAvatar(data) {
+    this._profileAvatar.src = data.avatar;
+  }
 
   setUserInfo(inputValues) {
     this._profileName.textContent = inputValues.name;

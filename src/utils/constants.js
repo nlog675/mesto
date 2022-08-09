@@ -12,3 +12,7 @@ export const popupEditSubmitButton = document.querySelector('.popup__profile-edi
 export const popupPicture = document.querySelector('.popup-picture');
 export const API = 'https://nomoreparties.co/v1/cohort-47';
 export const popupDeleteCard = document.querySelector('.popup-delete');
+export const popupUserAvatar = document.querySelector('.popup__avatar');
+export const avatarChangeButton = document.querySelector('.profile__button-change-avatar');
+export const profileAvatar = document.querySelector('.profile__avatar');
+export const formElementAvatar = document.querySelector('.popup__form-add-avatar');

@@ -44,7 +44,7 @@ export default class Api {
   editProfile(data) {
     return fetch(`${API}/users/me`, {
       method: 'PATCH',
-      headers: this._getHeaders,
+      headers: this._getHeaders(),
       body: JSON.stringify({
         name: data.name,
         about: data.about
@@ -68,10 +68,9 @@ export default class Api {
   }
 
   likeCard(id) {
-    return fetch(`${API}/cards/${id}`, {
-      method: 'PATCH',
+    return fetch(`${API}/cards/${id}/likes`, {
+      method: 'PUT',
       headers: this._getHeaders(),
-      body: JSON.stringify({liked: true})
     })
     .then((res) => this._getResponse(res))
     .catch(err => console.log(err))
@@ -81,6 +80,18 @@ export default class Api {
     return fetch(`${API}/cards/${id}`, {
       method: 'DELETE',
       headers: this._getHeaders()
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  changeAvatar(data) {
+    return fetch(`${API}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        avatar: data
+      })
     })
     .then((res) => this._getResponse(res))
     .catch(err => console.log(err))
