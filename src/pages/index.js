@@ -21,12 +21,14 @@ import {
   popupAboutYou,
   formElementAdd,
   cardList,
-  popupPicture
+  popupPicture,
+  popupDeleteCard
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import { data } from "autoprefixer";
 import Api from "../components/Api.js"
 import { API } from "../utils/constants.js";
+import PopupWithConfirmation from "../components/PopupWithConfirmation";
 
 
 
@@ -40,11 +42,9 @@ const validationSettings = ({
 });
 
 const popupWithImage = new PopupWithImage(popupPicture);
-
 popupWithImage.setEventListeners();
 
 const userInfo = new UserInfo(profileName, profileAbout);
-
 
 
 const api = new Api(API);
@@ -91,26 +91,30 @@ function handleCardClick(name, link) {
 }
 
 function handleCreateCard(data) {
-  const userCard = new Card(data, '.template-item', handleCardClick, deleteCard, likeCard).render();
+  const userCard = new Card(data, '.template-item', handleCardClick, {handleDeleteCard}, likeCard).render();
 
   return userCard;
 }
 
-function deleteCard(id) {
-  return api.deleteCard(id)
+const popupDelete = new PopupWithConfirmation(popupDeleteCard);
+
+popupDelete.setEventListeners();
+
+function handleDeleteCard(cardId) {
+  popupDelete.open();
+  // console.log(cardId);
+  popupDelete.setConfirmHandler(() => {
+    api.deleteCard(cardId)
+      .then(() => {
+        this.deleteCard()
+      })
+      .catch((err)  => console.log(err))
+  })
 }
 
 function likeCard(id) {
   return api.likeCard(id)
 }
-
-// const popupCard = new PopupWithForm({
-//   popupSelector: popupAdd,
-//   handleFormSubmit: (formData) => {
-//     const element = handleCreateCard(formData, '.template-item');
-//     cardList.prepend(element);
-//   }
-// })
 
 const popupCard = new PopupWithForm({
   popupSelector: popupAdd,
@@ -118,7 +122,6 @@ const popupCard = new PopupWithForm({
     api.addCard(FormData)
     .then((res) => {
       const element = handleCreateCard(res);
-      // cardList.addItem(element)
       cardList.prepend(element)
     })
     .catch(err => console.log(err))

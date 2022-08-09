@@ -10,4 +10,5 @@ export const cardList = document.querySelector('.elements__list');
 export const formElementAdd = document.querySelector('.popup__form-add-card');
 export const popupEditSubmitButton = document.querySelector('.popup__profile-edit-btn');
 export const popupPicture = document.querySelector('.popup-picture');
-export const API = 'https://nomoreparties.co/v1/cohort-47'
+export const API = 'https://nomoreparties.co/v1/cohort-47';
+export const popupDeleteCard = document.querySelector('.popup-delete');

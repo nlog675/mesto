@@ -1,17 +1,18 @@
 import { data } from "autoprefixer";
-import { popupPicture } from "../utils/constants";
+import { popupDeleteCard, popupPicture } from "../utils/constants";
 import PopupWithImage from "./PopupWithImage";
 import {popupWithImage} from "../pages/index.js"
 
 export default class Card {
-    constructor(data, cardSelector, handleCardClick, handleDeleteCard, handleLikeCard) {
+    constructor(data, cardSelector, handleCardClick, {handleDeleteCard}, handleLikeCard) {
         this._data = data;
         this._cardSelector = cardSelector;
         this._handleCardClick = handleCardClick;
         this._handleDeleteCard = handleDeleteCard;
-        this._deleteCard = this._deleteCard.bind(this);
+        // this._deleteCard = this._deleteCard.bind(this);
         this._handleLikeCard = handleLikeCard;
-        this._likes = data.likes
+        this._likes = data.likes;
+        this._cardId = data._id
     };
 
     _getTemplate() {
@@ -26,7 +27,7 @@ export default class Card {
 
     _addEventListeners() {
         this._element.querySelector('.elements__card-delete')
-        .addEventListener('click', () => this._deleteCard());
+        .addEventListener('click', () => this._handleDeleteCard(this._cardId));
 
         this._cardLikeButton = this._element.querySelector('.elements__card-like');
 
@@ -36,19 +37,24 @@ export default class Card {
     };
 
     _countLikes() {
-        this._card.querySelector('.elements__card-like-counter').textContent = this._likes.length;
+        this._element.querySelector('.elements__card-like-counter').textContent = this._likes.length;
     }
 
-    async _deleteCard() {
-        try {
-            await this._handleDeleteCard(this._data._id)
-            this._element.remove();
-            this._element = null;
-        }
-        catch(err) {
-            console.log(err);
-        }
-    };
+    deleteCard() {
+        this._element.remove();
+        this._element = null
+    }
+
+    // async _deleteCard() {
+    //     try {
+    //         await this._handleDeleteCard(this._data._id)
+    //         this._element.remove();
+    //         this._element = null;
+    //     }
+    //     catch(err) {
+    //         console.log(err);
+    //     }
+    // };
 
     _likeCard() {
         this._handleLikeCard(this._data._id)
