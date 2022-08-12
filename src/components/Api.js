@@ -1,4 +1,3 @@
-// import { _getResponse } from "../utils/utils";
 import { API } from "../utils/constants";
 
 export default class Api {
@@ -70,6 +69,15 @@ export default class Api {
   likeCard(id) {
     return fetch(`${API}/cards/${id}/likes`, {
       method: 'PUT',
+      headers: this._getHeaders(),
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  dislikeCard(id) {
+    return fetch(`${API}/cards/${id}/likes`, {
+      method: 'DELETE',
       headers: this._getHeaders(),
     })
     .then((res) => this._getResponse(res))

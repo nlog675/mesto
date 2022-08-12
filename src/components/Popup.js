@@ -1,7 +1,8 @@
 export default class Popup {
   constructor(popupSelector) {
     this._popupSelector = popupSelector;
-    this._handleEscClose = this._handleEscClose.bind(this)
+    this._handleEscClose = this._handleEscClose.bind(this);
+    this._buttonSubmit = this._popupSelector.querySelector('.popup__button');
   };
 
   open() {
@@ -17,6 +18,14 @@ export default class Popup {
   _handleEscClose(e) {
     if (e.key === 'Escape') {
       this.close();
+    }
+  };
+
+  renderLoading(isLoading, text){
+    if (isLoading) {
+      this._buttonSubmit.textContent = text
+    } else {
+      this._buttonSubmit.textContent = text
     }
   };
 

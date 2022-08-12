@@ -1,5 +1,3 @@
-import {popupAboutYou, popupYourName, profileAbout, profileName} from '../utils/constants.js';
-
 export default class UserInfo {
   constructor(profileName, profileAbout, profileAvatar) {
     this._profileName = profileName;
@@ -23,6 +21,5 @@ export default class UserInfo {
   setUserInfo(inputValues) {
     this._profileName.textContent = inputValues.name;
     this._profileAbout.textContent = inputValues.about;
-    // this._userId = data._id;
   };
 };

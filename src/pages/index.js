@@ -7,20 +7,16 @@ import popupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 
-import { initialCards } from "../utils/initialCards.js";
-
 import { 
   popupEdit,
   popupAdd,
   profileName,
   profileAbout,
-  popupEditSubmitButton,
   buttonEdit,
   buttonAdd,
   popupYourName,
   popupAboutYou,
   formElementAdd,
-  cardList,
   popupPicture,
   popupDeleteCard,
   popupUserAvatar,
@@ -55,30 +51,27 @@ const api = new Api(API);
 
 let userId
 
-api.getProfile()
-  .then(user => {
-    userInfo.setUserInfo(user);
-    userInfo.setNewAvatar(user);
-    userId = user._id;
-  });
+Promise.all([api.getProfile(), api.getCard()])
+    .then(([user, data]) => {
+      userId = user._id;
+      userInfo.setUserInfo(user);
+      userInfo.setNewAvatar(user);
 
-  api.getCard()
-    .then(data => {
-      cardsContainer.renderItems(data)
+      cardsContainer.renderItems(data.reverse());
     })
-
-
-
+    .catch((err) => console.log(err))
 
 const popupProfile = new popupWithForm({
   popupSelector: popupEdit,
   handleFormSubmit: inputValues => {
+    popupProfile.renderLoading(true, 'Сохранение...')
     api.editProfile(inputValues)
       .then(() => {
         userInfo.setUserInfo(inputValues)
         popupProfile.close()
       })
       .catch((err) => console.log(err))
+      .finally(() => popupProfile.renderLoading(false, 'Сохранить'))
   }
 });
 
@@ -87,12 +80,14 @@ popupProfile.setEventListeners();
 const popupAvatar = new PopupWithForm({
   popupSelector: popupUserAvatar,
   handleFormSubmit: data => {
+    popupAvatar.renderLoading(true, 'Сохранение...')
     api.changeAvatar(data.link)
       .then((data) => {
         userInfo.setNewAvatar(data);
         popupAvatar.close();
       })
       .catch((err) => console.log(err))
+      .finally(() => popupAvatar.renderLoading(false, 'Сохранить'))
   }
 })
 
@@ -117,7 +112,7 @@ function handleCardClick(name, link) {
 }
 
 function handleCreateCard(data) {
-  const userCard = new Card(data, '.template-item', handleCardClick, {handleDeleteCard}, handleLikeCard, userId).render();
+  const userCard = new Card(data, '.template-item', handleCardClick, {handleDeleteCard}, handlePutLike, handleDeleteLike, userId).render();
 
   return userCard;
 }
@@ -130,31 +125,49 @@ function handleDeleteCard(cardId) {
   popupDelete.open();
   // console.log(cardId);
   popupDelete.setConfirmHandler(() => {
+    popupDelete.renderLoading(true, 'Удаление...')
     api.deleteCard(cardId)
       .then(() => {
         this.deleteCard()
+        popupDelete.close()
       })
       .catch((err)  => console.log(err))
+      .finally(() => popupDelete.renderLoading(false, 'Да'))
   })
 }
 
-function handleLikeCard(cardId) {
-  return api.likeCard(cardId)
+function handlePutLike(card) {
+  api.likeCard(card._cardId)
+    .then((res) => {
+      // console.log(res);
+      card.putLike();
+      card.countLikes(res.likes);
+    })
+    .catch((err) => console.log(err))
 }
 
-// function likeCard(id) {
-//   return api.likeCard(id)
-// }
+function handleDeleteLike(card) {
+  api.dislikeCard(card._cardId)
+    .then((res) => {
+      card.deleteLike()
+      card.countLikes(res.likes)
+    })
+    .catch((err) => console.log(err))
+}
 
 const popupCard = new PopupWithForm({
   popupSelector: popupAdd,
   handleFormSubmit: (FormData) => {
+    popupCard.renderLoading(true, 'Создание...');
     api.addCard(FormData)
     .then((res) => {
-      const element = handleCreateCard(res);
-      cardList.prepend(element)
+        cardsContainer.addItem(handleCreateCard(res));
+        popupCard.close()
     })
     .catch(err => console.log(err))
+    .finally(() => {
+      popupCard.renderLoading(false, 'Создать')
+    })
   }
 })
 
