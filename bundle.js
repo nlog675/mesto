@@ -22644,6 +22644,129 @@ Warning.default = Warning
 
 /***/ }),
 
+/***/ "./src/components/Api.js":
+/*!*******************************!*\
+  !*** ./src/components/Api.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Api)
+/* harmony export */ });
+/* harmony import */ var _utils_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/constants */ "./src/utils/constants.js");
+
+
+class Api {
+  constructor() {
+    this._getResponse = this._getResponse.bind(this)
+    this._getHeaders = this._getHeaders.bind(this)
+  }
+
+  _getResponse(res) {
+    if (res.ok) {
+      return res.json();
+    }
+
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+
+  _getHeaders() {
+    return {
+    authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4',
+    'Content-Type': 'application/json'
+    }
+  }
+
+  getProfile() {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/users/me`, {
+      method: 'GET',
+      headers: this._getHeaders()
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  getCard() {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/cards`, {
+      credentials: 'omit',
+      method: 'GET',
+      headers: this._getHeaders()
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  editProfile(data) {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/users/me`, {
+      method: 'PATCH',
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        name: data.name,
+        about: data.about
+      })
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  addCard(data) {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/cards`, {
+      method: 'POST',
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        name: data.name,
+        link: data.link
+      })
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  likeCard(id) {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/cards/${id}/likes`, {
+      method: 'PUT',
+      headers: this._getHeaders(),
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  dislikeCard(id) {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/cards/${id}/likes`, {
+      method: 'DELETE',
+      headers: this._getHeaders(),
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  deleteCard(id) {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/cards/${id}`, {
+      method: 'DELETE',
+      headers: this._getHeaders()
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+
+  changeAvatar(data) {
+    return fetch(`${_utils_constants__WEBPACK_IMPORTED_MODULE_0__.API}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        avatar: data
+      })
+    })
+    .then((res) => this._getResponse(res))
+    .catch(err => console.log(err))
+  }
+}
+
+
+/***/ }),
+
 /***/ "./src/components/Card.js":
 /*!********************************!*\
   !*** ./src/components/Card.js ***!
@@ -22655,21 +22778,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Card)
 /* harmony export */ });
-/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! autoprefixer */ "./node_modules/autoprefixer/lib/autoprefixer.js");
-/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(autoprefixer__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/constants */ "./src/utils/constants.js");
-/* harmony import */ var _PopupWithImage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PopupWithImage */ "./src/components/PopupWithImage.js");
-/* harmony import */ var _pages_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/index.js */ "./src/pages/index.js");
-
-
-
-
-
 class Card {
-    constructor(data, cardSelector, handleCardClick) {
+    constructor(data, cardSelector, handleCardClick, {handleDeleteCard}, handlePutLike, handleDeleteLike, userId) {
         this._data = data;
         this._cardSelector = cardSelector;
         this._handleCardClick = handleCardClick;
+        this._handleDeleteCard = handleDeleteCard;
+        // this._handleLikeCard = handleLikeCard;
+        this._handlePutLike = handlePutLike;
+        this._handleDeleteLike = handleDeleteLike;
+        this._likes = data.likes;
+        this._cardId = data._id
+        this._ownerId = data.owner._id;
+        this._userId = userId;
     };
 
     _getTemplate() {
@@ -22683,24 +22804,56 @@ class Card {
     };
 
     _addEventListeners() {
-        this._element.querySelector('.elements__card-delete')
-        .addEventListener('click', () => this._deleteCard());
-
-        this._cardLikeButton = this._element.querySelector('.elements__card-like');
-
-        this._cardLikeButton.addEventListener('click', () => this._likeCard());
+        this._deleteIcon.addEventListener('click', () => this._handleDeleteCard(this._cardId));
 
         this._itemImage.addEventListener('click', () => this._handleCardClick(this._data.name, this._data.link));
+
+        this._cardLikeButton.addEventListener('click', () => {
+            if (this._cardLikeButton.classList.contains('elements__card-like_active')) {
+                this._handleDeleteLike(this)
+            } else {
+                this._handlePutLike(this)
+            }
+        })
     };
 
-    _deleteCard() {
+    countLikes(likes) {
+        this._likeCounter = this._element.querySelector('.elements__card-like-counter')
+        if (likes.length === 0) {
+            this._likeCounter.textContent = '';
+        } else {
+            this._likeCounter.textContent = likes.length;
+        }
+    }
+
+    putLike() {
+        this._cardLikeButton.classList.add('elements__card-like_active')
+    }
+
+    deleteLike() {
+        this._cardLikeButton.classList.remove('elements__card-like_active')
+    }
+
+    _checkLike() {
+        this._likes.forEach((item) => {
+            if(item._id === this._userId) {
+                this._cardLikeButton.classList.add('elements__card-like_active');
+            }
+        })
+    }
+
+    _whoseCard() {
+        // console.log(this._userId);
+        // console.log(this._ownerid);
+        if (this._ownerId !== this._userId) {
+            this._deleteIcon.remove();
+        }
+    }
+
+    deleteCard() {
         this._element.remove();
-        this._element = null;
-    };
-
-    _likeCard() {
-        this._cardLikeButton.classList.toggle('elements__card-like_active');
-    };
+        this._element = null
+    }
 
     render() {
         this._element = this._getTemplate();
@@ -22708,7 +22861,13 @@ class Card {
         this._itemImage.src = this._data.link;
         this._element.querySelector('.elements__card-heading').textContent = this._data.name;
         this._itemImage.alt = this._data.name;
+        this._deleteIcon = this._element.querySelector('.elements__card-delete');
+        this._cardLikeButton = this._element.querySelector('.elements__card-like');
         
+        
+        this._checkLike();
+        this.countLikes(this._likes);
+        this._whoseCard();
         this._addEventListeners();
 
         return this._element;
@@ -22807,13 +22966,6 @@ _toggleButtonState() {
         });
     };
 
-    // enableValidation() {
-    //     this._formList = Array.from(document.querySelectorAll(this._formSelector));
-    //     this._formList.forEach(() => {
-    //       this._setEventListeners();
-    //     });
-    //   };
-
     enableValidation(formElement, validationSettings) {
         this._setEventListeners(formElement, validationSettings)
     }
@@ -22838,7 +22990,8 @@ __webpack_require__.r(__webpack_exports__);
 class Popup {
   constructor(popupSelector) {
     this._popupSelector = popupSelector;
-    this._handleEscClose = this._handleEscClose.bind(this)
+    this._handleEscClose = this._handleEscClose.bind(this);
+    this._buttonSubmit = this._popupSelector.querySelector('.popup__button');
   };
 
   open() {
@@ -22857,6 +23010,14 @@ class Popup {
     }
   };
 
+  renderLoading(isLoading, text){
+    if (isLoading) {
+      this._buttonSubmit.textContent = text
+    } else {
+      this._buttonSubmit.textContent = text
+    }
+  };
+
   setEventListeners() {
     this._popupSelector.addEventListener('mousedown', e => {
       if (e.target.classList.contains('popup__close') || e.target === e.currentTarget) {
@@ -22865,6 +23026,41 @@ class Popup {
     });
   }
 };
+
+/***/ }),
+
+/***/ "./src/components/PopupWithConfirmation.js":
+/*!*************************************************!*\
+  !*** ./src/components/PopupWithConfirmation.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ PopupWithConfirmation)
+/* harmony export */ });
+/* harmony import */ var _Popup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Popup */ "./src/components/Popup.js");
+
+
+class PopupWithConfirmation extends _Popup__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(popupSelector) {
+    super(popupSelector);
+    this._popupDeleteButton = document.querySelector('.popup__card-del-btn');
+  }
+
+  setConfirmHandler(handler) {
+    this._confirmHandler = handler;
+  }
+
+  setEventListeners() {
+    super.setEventListeners();
+    this._popupDeleteButton.addEventListener('click', e => {
+      e.preventDefault();
+      this._confirmHandler()
+    })
+  }
+}
 
 /***/ }),
 
@@ -22902,13 +23098,9 @@ class PopupWithForm extends _Popup_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this._popupSelector.addEventListener('submit', e => {
       e.preventDefault();
       this._handleFormSubmit(this._getInputValues());
-      this.close();
+      // this.close();
     });
-    // this._popupSelector.addEventListener('mousedown', e => {
-    //   if (e.target.classList.contains('popup__close') || e.target === e.currentTarget) {
-    //     this.close();
-    //   }
-    // });
+    
     super.setEventListeners();
   };
 };
@@ -22959,18 +23151,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Section)
 /* harmony export */ });
 class Section {
-  constructor({ items, renderer }, containerSelector) {
-    this._renderedItems = items;
+  constructor({ renderer }, containerSelector) {
     this._renderer = renderer;
     this._container = document.querySelector(containerSelector);
   }
 
-  renderItems() {
-    this._renderedItems.forEach(item => this._renderer(item));
+  renderItems(data) {
+    data.forEach(item => this._renderer(item));
   };
 
   addItem(element) {
-    this._container.append(element);
+    this._container.prepend(element);
   };
 };
 
@@ -22987,162 +23178,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UserInfo)
 /* harmony export */ });
-/* harmony import */ var _utils_constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/constants.js */ "./src/utils/constants.js");
-
-
 class UserInfo {
-  constructor(profileName, profileAbout) {
+  constructor(profileName, profileAbout, profileAvatar) {
     this._profileName = profileName;
     this._profileAbout = profileAbout;
+    this._profileAvatar = profileAvatar;
   };
 
   getUserInfo() {
     this._userInfo = {
       inputName: this._profileName.textContent,
       inputAbout: this._profileAbout.textContent, 
+      userId: this._userId,
     }
     return this._userInfo;
   };
 
-  setUserInfo() {
-    this._profileName.textContent = _utils_constants_js__WEBPACK_IMPORTED_MODULE_0__.popupYourName.value;
-    this._profileAbout.textContent = _utils_constants_js__WEBPACK_IMPORTED_MODULE_0__.popupAboutYou.value;
+  setNewAvatar(data) {
+    this._profileAvatar.src = data.avatar;
+  }
+
+  setUserInfo(inputValues) {
+    this._profileName.textContent = inputValues.name;
+    this._profileAbout.textContent = inputValues.about;
   };
 };
-
-/***/ }),
-
-/***/ "./src/pages/index.js":
-/*!****************************!*\
-  !*** ./src/pages/index.js ***!
-  \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.css */ "./src/pages/index.css");
-/* harmony import */ var _components_Card_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Card.js */ "./src/components/Card.js");
-/* harmony import */ var _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormValidator.js */ "./src/components/FormValidator.js");
-/* harmony import */ var _components_Section_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Section.js */ "./src/components/Section.js");
-/* harmony import */ var _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/PopupWithForm.js */ "./src/components/PopupWithForm.js");
-/* harmony import */ var _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/UserInfo.js */ "./src/components/UserInfo.js");
-/* harmony import */ var _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/PopupWithImage.js */ "./src/components/PopupWithImage.js");
-/* harmony import */ var _utils_initialCards_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/initialCards.js */ "./src/utils/initialCards.js");
-/* harmony import */ var _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/constants.js */ "./src/utils/constants.js");
-/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! autoprefixer */ "./node_modules/autoprefixer/lib/autoprefixer.js");
-/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(autoprefixer__WEBPACK_IMPORTED_MODULE_9__);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const validationSettings = ({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-});
-
-const popupWithImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_6__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupPicture);
-
-popupWithImage.setEventListeners();
-
-const userInfo = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.profileName, _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.profileAbout);
-
-const popupProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupEdit,
-  handleFormSubmit: data => userInfo.setUserInfo(data)
-});
-
-popupProfile.setEventListeners();
-
-_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.buttonEdit.addEventListener('click', () => {
-  const getInputValues = userInfo.getUserInfo();
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupYourName.value = getInputValues.inputName;
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupAboutYou.value = getInputValues.inputAbout;
-  formValidatorEdit.resetValidation()
-  popupProfile.open();
-});
-
-function handleCardClick(name, link) {
-  popupWithImage.open(name, link)
-}
-
-function handleCreateCard(data) {
-  const userCard = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"](data, '.template-item', handleCardClick).render();
-
-  return userCard;
-}
-
-const popupCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupAdd,
-  handleFormSubmit: (formData) => {
-    const element = handleCreateCard(formData, '.template-item');
-    _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.cardList.prepend(element);
-  }
-})
-
-popupCard.setEventListeners();
-
-_utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.buttonAdd.addEventListener('click', () => {
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.formElementAdd.reset();
-  formValidatorAdd.resetValidation();
-  popupCard.open();
-});
-
-const formValidatorAdd = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupAdd);
-const formValidatorEdit = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_8__.popupEdit);
-formValidatorAdd.enableValidation();
-formValidatorEdit.enableValidation();
-
-
-
-const cardsContainer = new _components_Section_js__WEBPACK_IMPORTED_MODULE_3__["default"] ({ 
-  items: _utils_initialCards_js__WEBPACK_IMPORTED_MODULE_7__.initialCards, 
-  renderer: (item) => {
-    const cardEl = handleCreateCard(item);
-    cardsContainer.addItem(cardEl)
-  },
-}, '.elements__list');
-
-cardsContainer.renderItems();
-
-
-
-
-
-
-
-fetch('https://mesto.nomoreparties.co/v1/cohort-47/cards', {
-  headers: {
-    authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
-  }
-})
-  .then(res => res.json())
-  .then((result) => {
-    console.log(result);
-  }); 
-
-fetch ('https://nomoreparties.co/v1/cohort-47/users/me', {
-  method: 'GET',
-  headers: {
-    authorization: '3797bd0f-31da-43b0-b12c-2d59c89b7ac4'
-  }
-})
 
 /***/ }),
 
@@ -23155,17 +23215,21 @@ fetch ('https://nomoreparties.co/v1/cohort-47/users/me', {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "API": () => (/* binding */ API),
+/* harmony export */   "avatarChangeButton": () => (/* binding */ avatarChangeButton),
 /* harmony export */   "buttonAdd": () => (/* binding */ buttonAdd),
 /* harmony export */   "buttonEdit": () => (/* binding */ buttonEdit),
-/* harmony export */   "cardList": () => (/* binding */ cardList),
 /* harmony export */   "formElementAdd": () => (/* binding */ formElementAdd),
+/* harmony export */   "formElementAvatar": () => (/* binding */ formElementAvatar),
 /* harmony export */   "popupAboutYou": () => (/* binding */ popupAboutYou),
 /* harmony export */   "popupAdd": () => (/* binding */ popupAdd),
+/* harmony export */   "popupDeleteCard": () => (/* binding */ popupDeleteCard),
 /* harmony export */   "popupEdit": () => (/* binding */ popupEdit),
-/* harmony export */   "popupEditSubmitButton": () => (/* binding */ popupEditSubmitButton),
 /* harmony export */   "popupPicture": () => (/* binding */ popupPicture),
+/* harmony export */   "popupUserAvatar": () => (/* binding */ popupUserAvatar),
 /* harmony export */   "popupYourName": () => (/* binding */ popupYourName),
 /* harmony export */   "profileAbout": () => (/* binding */ profileAbout),
+/* harmony export */   "profileAvatar": () => (/* binding */ profileAvatar),
 /* harmony export */   "profileName": () => (/* binding */ profileName)
 /* harmony export */ });
 const buttonEdit = document.querySelector('.profile__edit-button');
@@ -23176,51 +23240,15 @@ const profileName = document.querySelector('.profile__name');
 const profileAbout = document.querySelector('.profile__description');
 const buttonAdd = document.querySelector('.profile__add-button');
 const popupAdd = document.querySelector('.popup-add');
-const cardList = document.querySelector('.elements__list');
 const formElementAdd = document.querySelector('.popup__form-add-card');
-const popupEditSubmitButton = document.querySelector('.popup__profile-edit-btn');
 const popupPicture = document.querySelector('.popup-picture');
+const API = 'https://nomoreparties.co/v1/cohort-47';
+const popupDeleteCard = document.querySelector('.popup-delete');
+const popupUserAvatar = document.querySelector('.popup__avatar');
+const avatarChangeButton = document.querySelector('.profile__button-change-avatar');
+const profileAvatar = document.querySelector('.profile__avatar');
+const formElementAvatar = document.querySelector('.popup__form-add-avatar');
 
-
-/***/ }),
-
-/***/ "./src/utils/initialCards.js":
-/*!***********************************!*\
-  !*** ./src/utils/initialCards.js ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "initialCards": () => (/* binding */ initialCards)
-/* harmony export */ });
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
 
 /***/ }),
 
@@ -23443,12 +23471,208 @@ module.exports = JSON.parse('{"v0.8":{"start":"2012-06-25","end":"2014-07-31"},"
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/pages/index.js");
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+/*!****************************!*\
+  !*** ./src/pages/index.js ***!
+  \****************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.css */ "./src/pages/index.css");
+/* harmony import */ var _components_Card_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Card.js */ "./src/components/Card.js");
+/* harmony import */ var _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormValidator.js */ "./src/components/FormValidator.js");
+/* harmony import */ var _components_Section_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Section.js */ "./src/components/Section.js");
+/* harmony import */ var _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/PopupWithForm.js */ "./src/components/PopupWithForm.js");
+/* harmony import */ var _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/UserInfo.js */ "./src/components/UserInfo.js");
+/* harmony import */ var _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/PopupWithImage.js */ "./src/components/PopupWithImage.js");
+/* harmony import */ var _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/constants.js */ "./src/utils/constants.js");
+/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! autoprefixer */ "./node_modules/autoprefixer/lib/autoprefixer.js");
+/* harmony import */ var autoprefixer__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(autoprefixer__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _components_Api_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/Api.js */ "./src/components/Api.js");
+/* harmony import */ var _components_PopupWithConfirmation__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/PopupWithConfirmation */ "./src/components/PopupWithConfirmation.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const validationSettings = ({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+});
+
+const popupWithImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_6__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupPicture);
+popupWithImage.setEventListeners();
+
+const userInfo = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.profileName, _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.profileAbout, _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.profileAvatar);
+
+
+const api = new _components_Api_js__WEBPACK_IMPORTED_MODULE_9__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.API);
+
+let userId
+
+Promise.all([api.getProfile(), api.getCard()])
+    .then(([user, data]) => {
+      userId = user._id;
+      userInfo.setUserInfo(user);
+      userInfo.setNewAvatar(user);
+
+      cardsContainer.renderItems(data.reverse());
+    })
+    .catch((err) => console.log(err))
+
+const popupProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupEdit,
+  handleFormSubmit: inputValues => {
+    popupProfile.renderLoading(true, 'Сохранение...')
+    api.editProfile(inputValues)
+      .then(() => {
+        userInfo.setUserInfo(inputValues)
+        popupProfile.close()
+      })
+      .catch((err) => console.log(err))
+      .finally(() => popupProfile.renderLoading(false, 'Сохранить'))
+  }
+});
+
+popupProfile.setEventListeners();
+
+const popupAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupUserAvatar,
+  handleFormSubmit: data => {
+    popupAvatar.renderLoading(true, 'Сохранение...')
+    api.changeAvatar(data.link)
+      .then((data) => {
+        userInfo.setNewAvatar(data);
+        popupAvatar.close();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => popupAvatar.renderLoading(false, 'Сохранить'))
+  }
+})
+
+popupAvatar.setEventListeners()
+
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.avatarChangeButton.addEventListener('click', () => {
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.formElementAvatar.reset();
+  formValidatorAvatar.resetValidation()
+  popupAvatar.open()
+})
+
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.buttonEdit.addEventListener('click', () => {
+  const getInputValues = userInfo.getUserInfo();
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupYourName.value = getInputValues.inputName;
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupAboutYou.value = getInputValues.inputAbout;
+  formValidatorEdit.resetValidation()
+  popupProfile.open();
+});
+
+function handleCardClick(name, link) {
+  popupWithImage.open(name, link)
+}
+
+function handleCreateCard(data) {
+  const userCard = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"](data, '.template-item', handleCardClick, {handleDeleteCard}, handlePutLike, handleDeleteLike, userId).render();
+
+  return userCard;
+}
+
+const popupDelete = new _components_PopupWithConfirmation__WEBPACK_IMPORTED_MODULE_10__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupDeleteCard);
+
+popupDelete.setEventListeners();
+
+function handleDeleteCard(cardId) {
+  popupDelete.open();
+  // console.log(cardId);
+  popupDelete.setConfirmHandler(() => {
+    popupDelete.renderLoading(true, 'Удаление...')
+    api.deleteCard(cardId)
+      .then(() => {
+        this.deleteCard()
+        popupDelete.close()
+      })
+      .catch((err)  => console.log(err))
+      .finally(() => popupDelete.renderLoading(false, 'Да'))
+  })
+}
+
+function handlePutLike(card) {
+  api.likeCard(card._cardId)
+    .then((res) => {
+      // console.log(res);
+      card.putLike();
+      card.countLikes(res.likes);
+    })
+    .catch((err) => console.log(err))
+}
+
+function handleDeleteLike(card) {
+  api.dislikeCard(card._cardId)
+    .then((res) => {
+      card.deleteLike()
+      card.countLikes(res.likes)
+    })
+    .catch((err) => console.log(err))
+}
+
+const popupCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+  popupSelector: _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupAdd,
+  handleFormSubmit: (FormData) => {
+    popupCard.renderLoading(true, 'Создание...');
+    api.addCard(FormData)
+    .then((res) => {
+        cardsContainer.addItem(handleCreateCard(res));
+        popupCard.close()
+    })
+    .catch(err => console.log(err))
+    .finally(() => {
+      popupCard.renderLoading(false, 'Создать')
+    })
+  }
+})
+
+popupCard.setEventListeners();
+
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.buttonAdd.addEventListener('click', () => {
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.formElementAdd.reset();
+  formValidatorAdd.resetValidation();
+  popupCard.open();
+});
+
+const formValidatorAdd = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupAdd);
+const formValidatorEdit = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupEdit);
+const formValidatorAvatar = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_2__["default"](validationSettings, _utils_constants_js__WEBPACK_IMPORTED_MODULE_7__.popupUserAvatar);
+formValidatorAdd.enableValidation();
+formValidatorEdit.enableValidation();
+formValidatorAvatar.enableValidation();
+
+
+
+const cardsContainer = new _components_Section_js__WEBPACK_IMPORTED_MODULE_3__["default"] ({ 
+  renderer: (item) => {
+    cardsContainer.addItem(handleCreateCard(item))
+  },
+}, '.elements__list');
+
+})();
+
 /******/ })()
 ;
 //# sourceMappingURL=bundle.js.map

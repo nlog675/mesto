@@ -14,6 +14,7 @@
 
     <main class="content">
         <section class="profile">
+            <button class="profile__button-change-avatar"></button>
             <img src="images/avatar.e7d376649aca6b620fcf.jpg" alt="Аватар автора" class="profile__avatar">
             <div class="profile__info">
                 <div class="profile__container">
@@ -50,7 +51,7 @@
                     <span id="error-name" class="popup__error name-error"></span>
                 </label>
                 <label for="" class="popup__form-label">
-                    <input id="bio" name="bio" type="text" class="popup__input popup__input-about" placeholder="О себе" minlength="2" maxlength="200" required>
+                    <input id="bio" name="about" type="text" class="popup__input popup__input-about" placeholder="О себе" minlength="2" maxlength="200" required>
                     <span id="error-bio" class="popup__error bio-error"></span>
                 </label>
                 <button type="submit" class="popup__button popup__profile-edit-btn">
@@ -91,6 +92,35 @@
             <button type="button" class="popup__close popup__close-pic"></button>
         </div>
     </div>
+<!-- попап подтверждения удаления карточки с сервера -->
+    <div class="popup popup-delete">
+        <div class="popup__content-delete">
+            <button type="button" class="popup__close popup__close-add"></button>
+            <h2 class="popup__title">
+                Вы уверены?
+            </h2>
+            <button type="submit" class="popup__button popup__card-del-btn">
+                Да
+            </button>
+        </div>
+    </div>
+<!-- попап редактирования аватара -->
+    <div class="popup popup__avatar">
+        <div class="popup__content-avatar">
+            <button type="button" class="popup__close popup__close-add"></button>
+            <h2 class="popup__title">
+                Обновить аватар
+            </h2>
+            <form name="avatar-change-form" class="popup__form popup__form-add-avatar">
+                <label for="" class="popup__form-label">
+                    <input id="avatar-url" name="link" type="url" class="popup__input popup__input-avatar" placeholder="Ссылка на аватар" required>
+                    <span id="error-avatar" class="popup__error avatar-url-error"></span>
+                </label>
+            <button type="submit" class="popup__button popup__card-change-avatar">
+                Сохранить
+            </button>
+        </div>
+    </div>
 <!-- шаблон карточки -->
     <template id="card" class="template-item">
         <li class="elements__item">
@@ -98,7 +128,10 @@
             <img class="elements__item-image">
             <div class="elements__card-info">
                 <h2 class="elements__card-heading"></h2>
-                <button type="button" class="elements__card-like"></button>
+                <div>
+                    <button type="button" class="elements__card-like"></button>
+                    <div class="elements__card-like-counter"></div>
+                </div>
             </div>
         </li>
     </template>
