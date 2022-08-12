@@ -22784,7 +22784,6 @@ class Card {
         this._cardSelector = cardSelector;
         this._handleCardClick = handleCardClick;
         this._handleDeleteCard = handleDeleteCard;
-        // this._handleLikeCard = handleLikeCard;
         this._handlePutLike = handlePutLike;
         this._handleDeleteLike = handleDeleteLike;
         this._likes = data.likes;
@@ -23244,9 +23243,9 @@ const formElementAdd = document.querySelector('.popup__form-add-card');
 const popupPicture = document.querySelector('.popup-picture');
 const API = 'https://nomoreparties.co/v1/cohort-47';
 const popupDeleteCard = document.querySelector('.popup-delete');
-const popupUserAvatar = document.querySelector('.popup__avatar');
+const popupUserAvatar = document.querySelector('.popup-avatar');
 const avatarChangeButton = document.querySelector('.profile__button-change-avatar');
-const profileAvatar = document.querySelector('.profile-avatar');
+const profileAvatar = document.querySelector('.profile__avatar');
 const formElementAvatar = document.querySelector('.popup__form-add-avatar');
 
 
