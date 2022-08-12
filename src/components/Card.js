@@ -4,7 +4,6 @@ export default class Card {
         this._cardSelector = cardSelector;
         this._handleCardClick = handleCardClick;
         this._handleDeleteCard = handleDeleteCard;
-        // this._handleLikeCard = handleLikeCard;
         this._handlePutLike = handlePutLike;
         this._handleDeleteLike = handleDeleteLike;
         this._likes = data.likes;
