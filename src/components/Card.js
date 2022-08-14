@@ -38,10 +38,10 @@ export default class Card {
 
     countLikes(likes) {
         this._likeCounter = this._element.querySelector('.elements__card-like-counter')
-        if (likes.length === 0) {
-            this._likeCounter.textContent = '';
-        } else {
+        if (likes.length) {
             this._likeCounter.textContent = likes.length;
+        } else {
+            this._likeCounter.textContent = '';
         }
     }
 
@@ -62,8 +62,6 @@ export default class Card {
     }
 
     _whoseCard() {
-        // console.log(this._userId);
-        // console.log(this._ownerid);
         if (this._ownerId !== this._userId) {
             this._deleteIcon.remove();
         }

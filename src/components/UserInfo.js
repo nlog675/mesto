@@ -6,16 +6,16 @@ export default class UserInfo {
   };
 
   getUserInfo() {
-    this._userInfo = {
+    return {
       inputName: this._profileName.textContent,
       inputAbout: this._profileAbout.textContent, 
       userId: this._userId,
     }
-    return this._userInfo;
   };
 
   setNewAvatar(data) {
     this._profileAvatar.src = data.avatar;
+    this._profileAvatar.alt = data.name;
   }
 
   setUserInfo(inputValues) {
