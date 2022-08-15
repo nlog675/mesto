@@ -39,11 +39,6 @@ module.exports = {
         ]
       },
       {
-        test: /\.js$/,
-        enforce: 'pre',
-        use: ['source-map-loader'],
-      },
-      {
         test: /\.(png|svg|jpg|gif)$/,
         type: 'asset/resource',
         generator: {
@@ -66,7 +61,5 @@ module.exports = {
     }),
     new MiniCssExtractPlugin(),
     new CleanWebpackPlugin()
-  ],
-
-  devtool: "source-map"
+  ]
 }
